@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="30dp"
+    tools:context=".ui.Education.EducationAddFragment">
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="24dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/etSchoolName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawablePadding="16dp"
+            android:fontFamily="@font/metropolis_regular"
+            android:hint="@string/schoolName"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="24dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/etDepartmentName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawablePadding="16dp"
+            android:fontFamily="@font/metropolis_regular"
+            android:hint="@string/departmentName"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="24dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/etGano"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawablePadding="16dp"
+            android:fontFamily="@font/metropolis_regular"
+            android:hint="@string/gano"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+       android:layout_width="match_parent"
+       android:weightSum="2"
+       android:layout_height="wrap_content">
+
+       <com.google.android.material.textfield.TextInputLayout
+           style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+           android:layout_width="match_parent"
+           android:layout_weight="1"
+           android:layout_height="wrap_content"
+           tools:layout_editor_absoluteX="24dp"
+           android:layout_marginEnd="10dp"
+           android:layout_marginStart="10dp"
+           tools:ignore="MissingConstraints">
+
+           <EditText
+               android:id="@+id/etStartDate"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:drawablePadding="16dp"
+               android:fontFamily="@font/metropolis_regular"
+               android:hint="@string/startDate"
+               android:inputType="number"
+               android:maxLines="1"
+               android:textColor="@android:color/black"
+               android:textSize="16sp" />
+       </com.google.android.material.textfield.TextInputLayout>
+
+       <com.google.android.material.textfield.TextInputLayout
+           style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           tools:layout_editor_absoluteX="24dp"
+           android:layout_marginEnd="10dp"
+           android:layout_marginStart="10dp"
+           tools:ignore="MissingConstraints">
+
+           <EditText
+               android:id="@+id/etFinishDate"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:drawablePadding="16dp"
+               android:fontFamily="@font/metropolis_regular"
+               android:hint="@string/finishDateExpected"
+               android:inputType="number"
+               android:maxLines="1"
+               android:textColor="@android:color/black"
+               android:textSize="14sp" />
+       </com.google.android.material.textfield.TextInputLayout>
+   </LinearLayout>
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_button"
+        android:text="@string/add"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black" />
+
+</LinearLayout>

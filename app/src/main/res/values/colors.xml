@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="blackLight">#323131</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">#6DB6C0</color>
+    <color name="colorPrimaryDark">#040477</color>
+
+    <color name="backgroundPrimary">#F3FDFF</color>
+
+
+    <!-- <color name="colorPrimarySignUp">#6DB6C0</color>
+     <color name="colorBackgroundLoginBottom">#4A60D5</color>
+     <color name="colorPrimaryDarkSignUp">#040477</color>
+ -->
+
+    <color name="backgroundForFiltersAndSorted">#E6E6E6</color>
+    <color name="backgroundForFiltersNameAndValue">#F5F5F5</color>
+    <color name="red">#E91E1E</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="textInputLayout">#96ffffff</color>
+
+
+    <color name="dd">#3B3B3B</color>
+
+</resources>
