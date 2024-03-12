@@ -33,6 +33,7 @@ class Styles {
     fun styleForJobTitle(): Style? {
         return Style()
             .setFontColor(DeviceRgb(96, 96, 96)) // Koyu Gri
+            .setFont(pdfFontLight)
             .setFontSize(20f) // punto büyüklüğü
             .setTextAlignment(TextAlignment.JUSTIFIED) // hem sol hem de sağ kenar boşluklarına hizalayarak metni eşit şekilde
     }

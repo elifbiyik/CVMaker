@@ -60,6 +60,10 @@
     <string name="companyName">Company Name * </string>
     <string name="positionName">Position Name * </string>
     <string name="infoAboutJob">Information About Job</string>
+    <string name="startMonthDate">Start Date (Month) * </string>
+    <string name="startYearDate">Start Date (Year) * </string>
+    <string name="finishMonthDate">Finish Date (Month) * </string>
+    <string name="finishYearDate">Finish Date (Year) * </string>
 
 
     <!-- Languages -->

@@ -5,7 +5,8 @@ import com.eb.cvmaker.dB.CommunicationDao
 import javax.inject.Inject
 
 
-class CommunicationRepository @Inject constructor(private val dao: CommunicationDao) :
+class CommunicationRepository @Inject constructor(
+    private val dao: CommunicationDao) :
     BaseRepository<Communication>(dao) {
 
     suspend fun getUserCommunicationInfo(): List<Communication> {

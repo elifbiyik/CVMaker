@@ -38,11 +38,20 @@ class ExperienceAddFragment : Fragment() {
         if (id != null && nameCom != null && namePos != null &&
             dateSt != null ) {
 
+            val startMonth = dateSt.substring(0, dateSt.indexOf('.'))
+            val startYear = dateSt.substring(dateSt.indexOf('.') + 1)
+
+            val finishMonth = dateFin.substring(0, dateFin.indexOf('.'))
+            val finishYear = dateFin.substring(dateFin.indexOf('.') + 1)
+
+
             binding.etCompanyName.setText(nameCom)
             binding.etPositionName.setText(namePos)
             binding.etInfo.setText(info)
-            binding.etStartDate.setText(dateSt)
-            binding.etFinishDate.setText(dateFin)
+            binding.etStartDateMonth.setText(startMonth)
+            binding.etStartDateYear.setText(startYear)
+            binding.etFinishDateMonth.setText(finishMonth)
+            binding.etFinishDateYear.setText(finishYear)
 
             binding.btnAdd.text = requireActivity().resources.getString(R.string.update)
         }
@@ -52,8 +61,15 @@ class ExperienceAddFragment : Fragment() {
                 var company = etCompanyName.text.toString()
                 var position = etPositionName.text.toString()
                 var info = etInfo.text.toString() ?: null
-                var startDate = etStartDate.text.toString()
-                var finishDate = etFinishDate.text.toString()
+                var startDate = etStartDateMonth.text.toString() +"."+ etStartDateYear.text.toString()
+                var finishDate :String
+
+               if(!etFinishDateMonth.text.isNullOrEmpty() && !etFinishDateYear.text.isNullOrEmpty()) {
+                   finishDate =
+                       etFinishDateMonth.text.toString() + "." + etFinishDateYear.text.toString()
+               } else {
+                   finishDate = etFinishDateMonth.text.toString() // Boş bırakıldığında (.) yazmasın diye month'u yazdırdık ama monyh yazmayack zaten (continue yazacak)
+               }
 
                 if (id != null) {
                     update(id, company, position, info, startDate, finishDate)

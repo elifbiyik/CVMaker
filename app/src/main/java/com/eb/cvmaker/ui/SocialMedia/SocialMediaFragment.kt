@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
+import com.eb.cvmaker.Model.Communication
 import com.eb.cvmaker.Model.SocialMedia
 import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.FragmentSocialMediaBinding
@@ -45,7 +46,8 @@ class SocialMediaFragment : Fragment() {
                 getUserHintTexts()
                 binding.btnAdd.setOnClickListener {
                     val addUser = getUserTexts()
-                    add(addUser)                }
+                    add(addUser)
+                }
             }
 
         }
@@ -55,62 +57,79 @@ class SocialMediaFragment : Fragment() {
 
     fun getUserInfo(userInfo: SocialMedia) {
         with(binding) {
-            etLinkedIn.setText(userInfo.linkedIn ?: requireActivity().resources.getString(R.string.linkedIn))
-            etGithub.setText(userInfo.github ?: requireActivity().resources.getString(R.string.github))
-            etWebSites.setText(userInfo.webSite ?: requireActivity().resources.getString(R.string.webSites))
 
-        }
-    }
+            if (!userInfo.linkedIn.isNullOrEmpty()) {
+                etLinkedIn.setText(userInfo.linkedIn)
+            } else {
+                etLinkedIn.hint =
+                    requireActivity().resources.getString(R.string.linkedIn)
+            }
 
-        fun getUserTexts(): SocialMedia {
-            return SocialMedia(
-                github = if (binding.etGithub.text.isNotBlank()) binding.etGithub.text.toString() else null,
-                linkedIn = if (binding.etLinkedIn.text.isNotBlank()) binding.etLinkedIn.text.toString() else null,
-                webSite = if (binding.etWebSites.text.isNotBlank()) binding.etWebSites.text.toString() else null,
-            )
-        }
-
-        fun getUserHintTexts() {
-            with(binding) {
-                etLinkedIn.hint = requireActivity().resources.getString(R.string.linkedIn)
+            if (!userInfo.github.isNullOrEmpty()) {
+                etGithub.setText(userInfo.github)
+            } else {
                 etGithub.hint =
                     requireActivity().resources.getString(R.string.github)
-                etWebSites.hint = requireActivity().resources.getString(R.string.webSites)
             }
-        }
 
-        fun add(userInfo: SocialMedia) {
-
-            viewModel.saveData(userInfo)
-            isSuccessful()
-        }
-
-        fun update(userInfo: SocialMedia) {
-
-            viewModel.updateData(userInfo)
-            isSuccessful()
-
-        }
-
-        fun delete(userInfo: SocialMedia) {
-            viewModel.deleteData(userInfo)
-            isSuccessful()
-        }
-
-        fun isSuccessful() {
-            observe(viewModel.isSuccessfulMLD) {
-                if (it == true)
-                    return@observe message(
-                        requireContext(),
-                        requireActivity().resources.getString(R.string.messageForSaved)
-                    )
-            }
-        }
-
-        override fun onResume() {
-            super.onResume()
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-                replace(InformationsFragment())
+            if (!userInfo.webSite.isNullOrEmpty()) {
+                etWebSites.setText(userInfo.webSite)
+            } else {
+                etWebSites.hint =
+                    requireActivity().resources.getString(R.string.webSites)
             }
         }
     }
+
+    fun getUserTexts(): SocialMedia {
+        return SocialMedia(
+            github = if (binding.etGithub.text.isNotBlank()) binding.etGithub.text.toString() else null,
+            linkedIn = if (binding.etLinkedIn.text.isNotBlank()) binding.etLinkedIn.text.toString() else null,
+            webSite = if (binding.etWebSites.text.isNotBlank()) binding.etWebSites.text.toString() else null,
+        )
+    }
+
+    fun getUserHintTexts() {
+        with(binding) {
+            etLinkedIn.hint = requireActivity().resources.getString(R.string.linkedIn)
+            etGithub.hint =
+                requireActivity().resources.getString(R.string.github)
+            etWebSites.hint = requireActivity().resources.getString(R.string.webSites)
+        }
+    }
+
+    fun add(userInfo: SocialMedia) {
+
+        viewModel.saveData(userInfo)
+        isSuccessful()
+    }
+
+    fun update(userInfo: SocialMedia) {
+
+        viewModel.updateData(userInfo)
+        isSuccessful()
+
+    }
+
+    fun delete(userInfo: SocialMedia) {
+        viewModel.deleteData(userInfo)
+        isSuccessful()
+    }
+
+    fun isSuccessful() {
+        observe(viewModel.isSuccessfulMLD) {
+            if (it == true)
+                return@observe message(
+                    requireContext(),
+                    requireActivity().resources.getString(R.string.messageForSaved)
+                )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            replace(InformationsFragment())
+        }
+    }
+}

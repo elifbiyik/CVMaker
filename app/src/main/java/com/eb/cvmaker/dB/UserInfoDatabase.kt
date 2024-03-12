@@ -24,5 +24,4 @@ abstract class UserInfoDatabase : RoomDatabase() {
     abstract fun languageDao(): LanguageDao
     abstract fun referencesDao(): ReferencesDao
     abstract fun socialMediaDao(): SocialMediaDao
-//    abstract fun userInfoDao(): UserInfoDao
 }

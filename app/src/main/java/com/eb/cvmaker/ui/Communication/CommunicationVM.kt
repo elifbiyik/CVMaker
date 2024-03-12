@@ -20,11 +20,12 @@ class CommunicationVM @Inject constructor(private var repository: CommunicationR
         getUserCommunicationInfo()
     }
 
-    fun getUserCommunicationInfo () {
+    fun getUserCommunicationInfo() {
         viewModelScope.launch(Dispatchers.Main) {
             var response = repository.getUserCommunicationInfo()
             userInfoMLD.value = response
         }
     }
+
 
 }

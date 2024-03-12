@@ -10,7 +10,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.eb.cvmaker.Model.Communication
 import com.eb.cvmaker._paragraphStyle.Styles
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.itextpdf.layout.Style
 import com.itextpdf.layout.borders.Border
 import com.itextpdf.layout.borders.SolidBorder
@@ -118,4 +120,16 @@ fun addValueSameCell(
     cell.add(paragraph).setBorder(Border.NO_BORDER)
 
     return cell
+}
+
+fun String?.formatPhone(): String? {
+    return this.takeIf { it?.length == 13 || it?.length == 17 }?.let {
+        try {
+            val phoneUtil = PhoneNumberUtil.getInstance()
+            val phoneNumber = phoneUtil.parse(it, "TR")
+            "+90 " + phoneUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL).removePrefix("0")
+        } catch (e: Exception) {
+            it // Formatlamada bir hata olursa, orijinal değeri döndür
+        }
+    }
 }

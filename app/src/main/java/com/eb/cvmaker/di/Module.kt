@@ -11,7 +11,6 @@ import com.eb.cvmaker.dB.LanguageDao
 import com.eb.cvmaker.dB.ReferencesDao
 import com.eb.cvmaker.dB.SocialMediaDao
 import com.eb.cvmaker.dB.UserInfoDatabase
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
@@ -88,5 +87,4 @@ object Module {
     fun provideFirebaseStorage(): FirebaseStorage {
         return FirebaseStorage.getInstance()
     }
-
 }

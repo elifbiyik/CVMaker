@@ -1,7 +1,6 @@
 package com.eb.cvmaker.ui._Create
 
 import android.content.Context
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.eb.cvmaker.R
@@ -22,7 +21,6 @@ import com.itextpdf.layout.element.Table
 import com.itextpdf.layout.element.Text
 import com.itextpdf.layout.property.TextAlignment
 import com.itextpdf.layout.property.UnitValue
-import java.util.Locale
 import javax.inject.Inject
 
 
@@ -51,12 +49,12 @@ class Template_1 @Inject constructor(
     // lifecycleOwner fragment'ın yaşam döngüsü olaylarını gözlemlemek için kullanılır.
     val lifecycleOwner = requireActivity as LifecycleOwner // Assuming you're in a fragment
 
-    // Bunu ınject yapabiliz.
 
 
     fun generateCV(document: Document) {
 
         informationCommunication(document)
+   //     informationSocialMedia(document)
         informationLanguage(document)
         informationEducation(document)
         informationAbilities(document)
@@ -64,17 +62,14 @@ class Template_1 @Inject constructor(
         informationReferences(document)
     }
 
-
     // Communication
     fun informationCommunication(document: Document) {
-
         personalInformationNameSurname(document)
         personalInformationJob(document)
         personalInformationAboutMe(document)
         personalInformationCommunication(document)
     }
 
-    // Locale... -> Türkçe karakterlerin yazmasını sağlıyor
     fun personalInformationNameSurname(document: Document) {
         val infoParagraph = Paragraph()
 
@@ -86,8 +81,6 @@ class Template_1 @Inject constructor(
 
                         var nameUpper = it.name?.toUpperCase()
                         var surnameUpper = it.surname?.toUpperCase()
-
-                        Log.d("Eliffffff", nameUpper.toString())
 
                         add(addText(nameUpper, style.styleForNameAndSurname())).setTextAlignment(TextAlignment.CENTER)
                         add("  ")
@@ -180,6 +173,46 @@ class Template_1 @Inject constructor(
         }
     }
 
+
+    // Social Media
+    fun informationSocialMedia (document: Document) {
+        var table = Table(3)
+        val imageGithub = image.image(context, R.drawable.github)
+        val imageLinkedin = image.image(context, R.drawable.linkedin)
+        val imageWebSite = image.image(context, R.drawable.websites)
+
+        lifecycleOwner.observe(viewModel.socialMediaMLD){  socialMedia ->
+            if(!socialMedia.isNullOrEmpty()) {
+                socialMedia.forEach {
+                    with(table) {
+                        if(!it.github.isNullOrEmpty()) {
+                            var cell = addValueSameCell(//imageGithub,
+                                val1 = it.github)
+                            addCell(cell)
+                        }
+
+                        if(!it.linkedIn.isNullOrEmpty()) {
+                            var cell = addValueSameCell(//imageLinkedin,
+                                val1 = it.linkedIn)
+                            addCell(cell)
+                        }
+
+                        if(!it.webSite.isNullOrEmpty()) {
+                            var cell = addValueSameCell(//imageWebSite,
+                                val1 = it.webSite)
+                            addCell(cell)
+                        }
+                    }
+                }
+
+                table.setBorder(Border.NO_BORDER)
+                table.setWidth(UnitValue.createPercentValue(100f)) // Tablonun genişliği ayarlanıyor telefona oranlayıp
+
+                document.add(table)
+                document.add(line())
+            }
+        }
+    }
 
     // Language
     fun titleLanguage(): Paragraph {

@@ -1,6 +1,10 @@
 package com.eb.cvmaker.ui.Communication
 
 import android.os.Bundle
+import android.telephony.PhoneNumberFormattingTextWatcher
+import android.telephony.PhoneNumberUtils
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +13,7 @@ import androidx.fragment.app.viewModels
 import com.eb.cvmaker.Model.Communication
 import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.FragmentCommunicationBinding
+import com.eb.cvmaker.formatPhone
 import com.eb.cvmaker.message
 import com.eb.cvmaker.observe
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,38 +31,60 @@ class CommunicationFragment : Fragment() {
 
         binding = FragmentCommunicationBinding.inflate(inflater, container, false)
 
+        setupUI()
+        observeViewModel()
+
+       binding.etPhone.addTextChangedListener(PhoneNumberFormattingTextWatcher("TR"))
+
+        binding.etPhone.setOnClickListener {
+            val formattedNumber = binding.etPhone.text.toString().formatPhone()
+            if (formattedNumber != null) {
+                binding.etPhone.setText(formattedNumber)
+                binding.etPhone.setSelection( binding.etPhone.text.length)
+            }
+        }
+
+        return binding.root
+    }
+
+    private fun setupUI() {
         binding.imDelete.setOnClickListener {
             observe(viewModel.userInfoMLD) {
                 if (!it.isNullOrEmpty()) {
-                    var user = it[0]
-                    delete(user)
+                    delete(it[0])
                     getUserHintTexts()
                     getUserTexts()
                 }
             }
         }
 
+    }
+
+    private fun observeViewModel() {
         observe(viewModel.userInfoMLD) {
-
             if (!it.isNullOrEmpty()) {
-                var user = it[0]
-
+                val user = it[0]
                 getUserInfo(user)
 
                 binding.btnApprove.setOnClickListener {
-                    val updatedUser = getUserTexts().copy(id = user.id)
-                    update(updatedUser)
+                    update(getUserTexts().copy(id = user.id))
                 }
             } else {
                 getUserHintTexts()
                 binding.btnApprove.setOnClickListener {
-                    val addUser = getUserTexts()
-                    add(addUser)
+                    add(getUserTexts())
                 }
             }
         }
 
-        return binding.root
+        observe(viewModel.isSuccessfulMLD) {
+            if (it == true) {
+                message(
+                    requireContext(),
+                    requireActivity().resources.getString(R.string.messageForSaved)
+                )
+            }
+        }
     }
 
     fun getUserTexts(): Communication {
@@ -65,9 +92,10 @@ class CommunicationFragment : Fragment() {
             name = if (binding.etUsername.text.isNotBlank()) binding.etUsername.text.toString() else null,
             surname = if (binding.etSurname.text.isNotBlank()) binding.etSurname.text.toString() else null,
             email = if (binding.etMail.text.isNotBlank()) binding.etMail.text.toString() else null,
-            phone = if (binding.etPhone.text.isNotBlank()) binding.etPhone.text.toString() else null,
+            phone = if (binding.etPhone.text?.isNotBlank() == true) binding.etPhone.text.toString().formatPhone() else null,
             job = if (binding.etJob.text.isNotBlank()) binding.etJob.text.toString() else null,
             aboutMe = if (binding.etAboutMe.text.isNotBlank()) binding.etAboutMe.text.toString() else null,
+            address = if (binding.etAddress.text.isNotBlank()) binding.etAddress.text.toString() else null,
             birtday = if (binding.etBirtday.text.isNotBlank()) binding.etBirtday.text.toString() else null,
             gender = if (binding.etGender.text.isNotBlank()) binding.etGender.text.toString() else null,
             drivingLicence = if (binding.etDrivingLicence.text.isNotBlank()) binding.etDrivingLicence.text.toString() else null,
@@ -125,7 +153,7 @@ class CommunicationFragment : Fragment() {
             }
 
             if (!userInfo.phone.isNullOrEmpty()) {
-                binding.etPhone.setText(userInfo.phone)
+                binding.etPhone.setText(userInfo.phone.formatPhone())
             } else {
                 binding.etPhone.hint =
                     requireActivity().resources.getString(R.string.phone)
@@ -176,13 +204,11 @@ class CommunicationFragment : Fragment() {
     }
 
     fun add(userInfo: Communication) {
-
         viewModel.saveData(userInfo)
         isSuccessful()
     }
 
     fun update(userInfo: Communication) {
-
         viewModel.updateData(userInfo)
         isSuccessful()
     }
