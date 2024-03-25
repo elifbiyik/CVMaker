@@ -6,7 +6,7 @@
     <string name="delete">Delete</string>
 
     <!-- Title -->
-    <string name="Abilities">ABILITIES</string>
+    <string name="Abilities">SKILLS</string>
     <string name="Certificates">CERTIFICATES</string>
     <string name="Communication">COMMUNICATION</string>
     <string name="Education">EDUCATION</string>
@@ -36,8 +36,8 @@
 
 
     <!-- Communication -->
-    <string name="name">Name</string>
-    <string name="surname">Surname</string>
+    <string name="name">Name * </string>
+    <string name="surname">Surname * </string>
     <string name="job">Job</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>
@@ -53,7 +53,7 @@
     <string name="schoolName">School Name * </string>
     <string name="departmentName">Department Name * </string>
     <string name="gano">GANO</string>
-    <string name="finishDateExpected">Finish Date (expected)</string>
+    <string name="finishDateExpected">Finish Date (expected) * </string>
 
 
     <!-- Experience -->
@@ -62,9 +62,8 @@
     <string name="infoAboutJob">Information About Job</string>
     <string name="startMonthDate">Start Date (Month) * </string>
     <string name="startYearDate">Start Date (Year) * </string>
-    <string name="finishMonthDate">Finish Date (Month) * </string>
-    <string name="finishYearDate">Finish Date (Year) * </string>
-
+    <string name="finishMonthDate">Finish Date (Month)</string>
+    <string name="finishYearDate">Finish Date (Year)</string>
 
     <!-- Languages -->
     <string name="languageName">Language Name * </string>
@@ -73,6 +72,9 @@
     <string name="linkedIn">LinkedIn</string>
     <string name="github">Github</string>
     <string name="webSites">WebSites</string>
+
+    <!-- References -->
+    <string name="position">Position</string>
 
 
     <string name="optional">Optional</string>
@@ -84,7 +86,7 @@
 
     <string name="note">Note : </string>
     <string name="noteMessage"> If you are continuing, you can leave the finish date blank. </string>
-    <string name="continueEx">Continue</string>
+    <string name="continueEx">Present</string>
 
 
     <string name="messageForEmpty">Empty fields must be filled</string>
@@ -98,12 +100,25 @@
     <string name="buttonForOK">OK</string>
 
 
-    <string name="template">Template </string>
+    <string name="template">TEMPLATES</string>
 
 
     <string name="CV">Created CV</string>
-    <string name="dots"> : </string>
-    <string name="line"> - </string>
+    <string name="dots">\u00A0 : \u00A0</string>
+    <string name="line">\u00A0 - \u00A0</string>
+    <string name="space">\u00A0</string>
+    <string name="verticaLine">\u00A0 | \u00A0</string>
 
+    <string name="emptyNameAndSurname">You should not leave the name and surname field blank.</string>
+
+
+    <string name="contact">CONTACT</string>
+    <string name="skills">SKILLS</string>
+    <string name="summary">PROFILE SUMMARY</string>
+
+    <string name="alert_exit">Exit</string>
+    <string name="alert_logOut">Do you want to log out?</string>
+    <string name="alert_No">No</string>
+    <string name="alert_Yes">Yes</string>
 
 </resources>

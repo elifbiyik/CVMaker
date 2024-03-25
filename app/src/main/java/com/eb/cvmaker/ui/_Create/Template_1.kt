@@ -14,7 +14,6 @@ import com.eb.cvmaker.line
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.title
 import com.itextpdf.layout.Document
-import com.itextpdf.layout.borders.Border
 import com.itextpdf.layout.element.Cell
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
@@ -38,7 +37,7 @@ import javax.inject.Inject
 
 
 class Template_1 @Inject constructor(
-    private val viewModel: ChooseTemplateViewModel,
+    private val viewModel: ChooseTemplateVM,
     var requireActivity: FragmentActivity,
     var context: Context,
 ) {
@@ -50,11 +49,10 @@ class Template_1 @Inject constructor(
     val lifecycleOwner = requireActivity as LifecycleOwner // Assuming you're in a fragment
 
 
-
     fun generateCV(document: Document) {
 
         informationCommunication(document)
-   //     informationSocialMedia(document)
+        informationSocialMedia(document)
         informationLanguage(document)
         informationEducation(document)
         informationAbilities(document)
@@ -72,9 +70,7 @@ class Template_1 @Inject constructor(
 
     fun personalInformationNameSurname(document: Document) {
         val infoParagraph = Paragraph()
-
         lifecycleOwner.observe(viewModel.communicationMLD) {
-
             if (!it.isNullOrEmpty()) {
                 it?.forEach {
                     with(infoParagraph) {
@@ -82,9 +78,23 @@ class Template_1 @Inject constructor(
                         var nameUpper = it.name?.toUpperCase()
                         var surnameUpper = it.surname?.toUpperCase()
 
-                        add(addText(nameUpper, style.styleForNameAndSurname())).setTextAlignment(TextAlignment.CENTER)
+                        add(
+                            addText(
+                                nameUpper,
+                                style.template_1_Name(),
+                                -10f,
+                                -10f
+                            )
+                        ).setTextAlignment(TextAlignment.CENTER)
                         add("  ")
-                        add(addText(surnameUpper, style.styleForNameAndSurname())).setTextAlignment(TextAlignment.CENTER)
+                        add(
+                            addText(
+                                surnameUpper,
+                                style.template_1_Surname(),
+                                -10f,
+                                -10f
+                            )
+                        ).setTextAlignment(TextAlignment.CENTER)
                         add("\n")
                     }
                 }
@@ -104,9 +114,14 @@ class Template_1 @Inject constructor(
                         if (!it.job.isNullOrEmpty()) {
 
                             var jobUpper = it.job?.toUpperCase()
-                            add(addText(jobUpper, style.styleForJobTitle())).setTextAlignment(
-                                TextAlignment.CENTER
-                            )
+                            add(
+                                addText(
+                                    jobUpper,
+                                    style.template_1_Job(),
+                                    -5f,
+                                    -5f
+                                )
+                            ).setTextAlignment(TextAlignment.CENTER)
                             add("\n")
                         }
                     }
@@ -126,7 +141,7 @@ class Template_1 @Inject constructor(
                     with(infoParagraph) {
                         if (!it.aboutMe.isNullOrEmpty()) {
 
-                            add(Text(it.aboutMe)).addStyle(style.styleForText())
+                            add(addText(it.aboutMe, style.template_1_Calibri_11f(), 5f, 5f))
                             add("\n")
                         }
                     }
@@ -147,23 +162,45 @@ class Template_1 @Inject constructor(
                         // Phone
                         if (!it.phone.isNullOrEmpty()) {
                             var imagePhone = image.image(context, R.drawable.baseline_phone_24)
-                            addCell(addValueSameCell(image = imagePhone, val1 = it.phone))
+                            addCell(
+                                addValueSameCell(
+                                    image = imagePhone,
+                                    val1 = it.phone,
+                                    styles1 = style.template_1_Calibri_11f(),
+                                    top = 5f,
+                                    bottom = 5f
+                                )
+                            )
                         }
 
                         // Mail
                         if (!it.email.isNullOrEmpty()) {
                             var imageMail = image.image(context, R.drawable.baseline_email_24)
-                            addCell(addValueSameCell(image = imageMail, val1 = it.email))
+                            addCell(
+                                addValueSameCell(
+                                    image = imageMail,
+                                    val1 = it.email,
+                                    styles1 = style.template_1_Calibri_11f(),
+                                    top = 5f,
+                                    bottom = 5f
+                                )
+                            )
                         }
 
                         if (!it.address.isNullOrEmpty()) {
                             // Location
                             var imageLocation =
                                 image.image(context, R.drawable.baseline_location_on_24)
-                            addCell(addValueSameCell(image = imageLocation, val1 = it.address))
+                            addCell(
+                                addValueSameCell(
+                                    image = imageLocation,
+                                    val1 = it.address,
+                                    styles1 = style.template_1_Calibri_11f(),
+                                    top = 5f,
+                                    bottom = 5f
+                                )
+                            )
                         }
-
-                        setBorder(Border.NO_BORDER)
                         setWidth(UnitValue.createPercentValue(100f))
                     }
                 }
@@ -173,40 +210,53 @@ class Template_1 @Inject constructor(
         }
     }
 
-
     // Social Media
-    fun informationSocialMedia (document: Document) {
+    fun informationSocialMedia(document: Document) {
         var table = Table(3)
-        val imageGithub = image.image(context, R.drawable.github)
-        val imageLinkedin = image.image(context, R.drawable.linkedin)
-        val imageWebSite = image.image(context, R.drawable.websites)
+        val imageGithub = image.image(context, R.drawable.github_)
+        val imageLinkedin = image.image(context, R.drawable.linkedin_)
+        val imageWebSite = image.image(context, R.drawable.website_)
 
-        lifecycleOwner.observe(viewModel.socialMediaMLD){  socialMedia ->
-            if(!socialMedia.isNullOrEmpty()) {
+        lifecycleOwner.observe(viewModel.socialMediaMLD) { socialMedia ->
+            if (!socialMedia.isNullOrEmpty()) {
                 socialMedia.forEach {
                     with(table) {
-                        if(!it.github.isNullOrEmpty()) {
-                            var cell = addValueSameCell(//imageGithub,
-                                val1 = it.github)
+                        if (!it.github.isNullOrEmpty()) {
+                            var cell = addValueSameCell(
+                                imageGithub,
+                                val1 = it.github,
+                                styles1 = style.template_1_Calibri_11f(),
+                                top = 5f,
+                                bottom = 5f
+                            )
                             addCell(cell)
                         }
 
-                        if(!it.linkedIn.isNullOrEmpty()) {
-                            var cell = addValueSameCell(//imageLinkedin,
-                                val1 = it.linkedIn)
+                        if (!it.linkedIn.isNullOrEmpty()) {
+                            var cell = addValueSameCell(
+                                imageLinkedin,
+                                val1 = it.linkedIn,
+                                styles1 = style.template_1_Calibri_11f(),
+                                top = 5f,
+                                bottom = 5f
+                            )
                             addCell(cell)
                         }
 
-                        if(!it.webSite.isNullOrEmpty()) {
-                            var cell = addValueSameCell(//imageWebSite,
-                                val1 = it.webSite)
+                        if (!it.webSite.isNullOrEmpty()) {
+                            var cell = addValueSameCell(
+                                imageWebSite,
+                                val1 = it.webSite,
+                                styles1 = style.template_1_Calibri_11f(),
+                                top = 5f,
+                                bottom = 5f
+                            )
                             addCell(cell)
                         }
                     }
                 }
 
-                table.setBorder(Border.NO_BORDER)
-                table.setWidth(UnitValue.createPercentValue(100f)) // Tablonun genişliği ayarlanıyor telefona oranlayıp
+                table.setWidth(UnitValue.createPercentValue(100f))
 
                 document.add(table)
                 document.add(line())
@@ -218,7 +268,7 @@ class Template_1 @Inject constructor(
     fun titleLanguage(): Paragraph {
         val infoParagraph = Paragraph()
         var title = requireActivity.resources.getString(R.string.Languages)
-        return title(infoParagraph, title)
+        return title(infoParagraph, title, style.template_1_Title())
     }
 
     fun informationLanguage(document: Document) {
@@ -232,16 +282,17 @@ class Template_1 @Inject constructor(
 
                             var cell = addValueSameCell(
                                 val1 = it.languageName!!,
+                                styles1 = style.template_1_Calibri_10f(),
                                 val2 = requireActivity.resources.getString(R.string.dots),
-                                val3 = it.level
+                                val3 = it.level,
+                                styles3 = style.template_1_Calibri_10f()
                             )
 
-                            addCell(cell).setBorder(Border.NO_BORDER)
+                            addCell(cell)
                         }
                     }
                 }
-                table.setBorder(Border.NO_BORDER)
-                table.setWidth(UnitValue.createPercentValue(100f)) // Tablonun genişliği ayarlanıyor telefona oranlayıp
+                table.setWidth(UnitValue.createPercentValue(100f))
 
                 document.add(titleLanguage())
                 document.add(table)
@@ -255,7 +306,7 @@ class Template_1 @Inject constructor(
     fun titleEducation(): Paragraph {
         val infoParagraph = Paragraph()
         var title = requireActivity.resources.getString(R.string.Education)
-        return title(infoParagraph, title)
+        return title(infoParagraph, title, style.template_1_Title())
     }
 
     fun informationEducation(document: Document) {
@@ -270,28 +321,34 @@ class Template_1 @Inject constructor(
                             addCell(
                                 addValueSameCell(
                                     val1 = it.startDate,
+                                    styles1 = style.template_1_Calibri_11f(),
                                     val2 = requireActivity.resources.getString(R.string.line),
-                                    val3 = it.finishDate
+                                    val3 = it.finishDate,
+                                    styles3 = style.template_1_Calibri_11f()
                                 )
                             )
 
-                            addCell(addValueCell(it.schoolName, style.styleBold15f()))
+                            addCell(addValueCell(it.schoolName, style.template_1_CalibriBold_11f()))
 
                             if (!it.gano.isNullOrEmpty()) {
-                                addCell(addValueCell(it.gano))
+                                addCell(addValueCell(it.gano, style.template_1_Calibri_10f()))
                             } else {
                                 addCell(emptyCell())
                             }
 
                             addCell(emptyCell())
 
-                            addCell(addValueCell(it.departmentName, style.styleItalic12f()))
+                            addCell(
+                                addValueCell(
+                                    it.departmentName,
+                                    style.template_1_CalibriItalic_10f()
+                                )?.setPaddingTop(-10f)
+                            )
                             addCell(emptyCell())
 
                         }
                     }
                 }
-                table.setBorder(Border.NO_BORDER)
                 table.setWidth(UnitValue.createPercentValue(100f))
 
                 document.add(titleEducation())
@@ -305,40 +362,41 @@ class Template_1 @Inject constructor(
     fun titleAbilities(): Paragraph {
         val infoParagraph = Paragraph()
         var title = requireActivity.resources.getString(R.string.Abilities)
-        return title(infoParagraph, title)
+        return title(infoParagraph, title, style.template_1_Title())
     }
 
     fun informationAbilities(document: Document) {
 
-        var table = Table(6)
+        var paragraph = Paragraph()
         lifecycleOwner.observe(viewModel.abilitiesMLD) { abilities ->
             if (!abilities.isNullOrEmpty()) {
                 abilities?.forEach {
                     var point = image.image(context, R.drawable.baseline_point_24)
                     if (!it.abilitiesName.isNullOrEmpty()) {
-                        table.addCell(addValueSameCell(point, val1 = it.abilitiesName!!))
+                        paragraph.add(" ")
+                        paragraph.add(point)
+                        paragraph.add(" ")
+                        paragraph.add(Text(it.abilitiesName).addStyle(style.template_1_Calibri_10f()))
+                        paragraph.add("  ")
                     }
                 }
-                table.setBorder(Border.NO_BORDER)
-                table.setWidth(UnitValue.createPercentValue(100f))
 
                 document.add(titleAbilities())
-                document.add(table)
+                document.add(paragraph)
                 document.add(line())
             }
         }
     }
 
-
     // Experience
     fun titleExperience(): Paragraph {
         val infoParagraph = Paragraph()
         var title = requireActivity.resources.getString(R.string.Experience)
-        return title(infoParagraph, title)
+        return title(infoParagraph, title, style.template_1_Title())
     }
 
     fun informationExperience(document: Document) {
-        var table = Table(3)
+        var table = Table(2)
 
         lifecycleOwner.observe(viewModel.experienceMLD) { experience ->
             if (!experience.isNullOrEmpty()) {
@@ -350,22 +408,37 @@ class Template_1 @Inject constructor(
                             if (!it.finishDate.isNullOrEmpty()) {
                                 cellDate = addValueSameCell(
                                     val1 = it.startDate,
+                                    styles1 = style.template_1_Calibri_11f(),
                                     val2 = requireActivity.resources.getString(R.string.line),
-                                    val3 = it.finishDate
+                                    val3 = it.finishDate,
+                                    styles3 = style.template_1_Calibri_11f()
                                 )
                             } else {
                                 cellDate = addValueSameCell(
                                     val1 = it.startDate,
+                                    styles1 = style.template_1_Calibri_11f(),
                                     val2 = requireActivity.resources.getString(R.string.line),
-                                    val3 = requireActivity.resources.getString(R.string.continueEx)
+                                    val3 = requireActivity.resources.getString(R.string.continueEx),
+                                    styles3 = style.template_1_Calibri_11f(),
                                 )
                             }
 
-                            addCell(cellDate).setBorder(Border.NO_BORDER)
+                            addCell(cellDate)
 
-                            addCell(addValueCell(it.positionName, style.styleBold15f()))
-                            addCell(addValueCell(it.companyName, style.styleForText()))
+                            addCell(
+                                addValueCell(
+                                    it.positionName,
+                                    style.template_1_CalibriBold_11f()
+                                )
+                            )
+                            addCell(emptyCell())
 
+                            addCell(
+                                addValueCell(
+                                    it.companyName,
+                                    style.template_1_Calibri_11f()
+                                )?.setPaddingTop(-10f)
+                            )
                             addCell(emptyCell())
 
                             var point = image.image(context, R.drawable.baseline_point_24)
@@ -375,21 +448,16 @@ class Template_1 @Inject constructor(
                                 cellInfo = addValueSameCell(
                                     point,
                                     val1 = it.infoAboutJob,
-                                    styles1 = style.styleItalic10f()
+                                    styles1 = style.template_1_Calibri_10f(),
+                                    top = -7f
                                 )
                             } else {
                                 addCell(emptyCell())
                             }
-
-
-                            addCell(cellInfo).setBorder(Border.NO_BORDER)
-
-                            addCell(emptyCell())
-
+                            addCell(cellInfo)
                         }
                     }
                 }
-                table.setBorder(Border.NO_BORDER)
                 table.setWidth(UnitValue.createPercentValue(100f))
 
                 document.add(titleExperience())
@@ -404,7 +472,7 @@ class Template_1 @Inject constructor(
     fun titleReferences(): Paragraph {
         val infoParagraph = Paragraph()
         var title = requireActivity.resources.getString(R.string.References)
-        return title(infoParagraph, title)
+        return title(infoParagraph, title, style.template_1_Title())
     }
 
     fun informationReferences(document: Document) {
@@ -419,22 +487,38 @@ class Template_1 @Inject constructor(
                             var cell = addValueSameCell(
                                 image = point,
                                 val1 = it.name!!,
-                                styles1 = style.styleBold12f(),
-                                val2 = it.surname,
-                                styles2 = style.styleBold12f()
+                                styles1 = style.template_1_Calibri_11f(),
+                                val2 = requireActivity.resources.getString(R.string.space),
+                                val3 = it.surname,
+                                styles3 = style.template_1_Calibri_11f()
                             )
-                            addCell(cell).setBorder(Border.NO_BORDER)
-
-                            addCell(addValueCell(it.positionName))
+                            addCell(cell)
 
                             if (!it.email.isNullOrEmpty()) {
-                                addCell(addValueCell(it.email))
+                                addCell(
+                                    addValueCell(
+                                        it.positionName,
+                                        style.template_1_Calibri_11f()
+                                    )
+                                )
+                            } else {
+                                addCell(emptyCell())
                             }
-                            addCell(addValueCell(it.phone))
+
+                            if (!it.email.isNullOrEmpty()) {
+                                addCell(addValueCell(it.email, style.template_1_Calibri_11f()))
+                            } else {
+                                addCell(emptyCell())
+                            }
+
+                            if (!it.email.isNullOrEmpty()) {
+                                addCell(addValueCell(it.phone, style.template_1_Calibri_11f()))
+                            } else {
+                                addCell(emptyCell())
+                            }
                         }
                     }
 
-                    setBorder(Border.NO_BORDER)
                     setWidth(UnitValue.createPercentValue(100f))
 
                     document.add(titleReferences())
@@ -444,6 +528,5 @@ class Template_1 @Inject constructor(
             }
         }
     }
-
 
 }

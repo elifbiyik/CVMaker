@@ -1,5 +1,6 @@
 package com.eb.cvmaker.ui.Communication
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.eb.cvmaker.Model.Communication
@@ -26,6 +27,4 @@ class CommunicationVM @Inject constructor(private var repository: CommunicationR
             userInfoMLD.value = response
         }
     }
-
-
 }

@@ -36,7 +36,7 @@ class EducationAddFragment : Fragment() {
 
         binding = FragmentEducationAddBinding.inflate(inflater, container, false)
 
-        if (id != null && nameDep != null && nameSch != null && dateSt != null) {
+        if (id != null && nameDep != null && nameSch != null && dateSt != null && dateFin != null) {
 
             binding.etDepartmentName.setText(nameDep)
             binding.etSchoolName.setText(nameSch)
@@ -46,10 +46,8 @@ class EducationAddFragment : Fragment() {
             }
 
             binding.etStartDate.setText(dateSt)
+            binding.etFinishDate.setText(dateFin)
 
-            dateFin.let {
-                binding.etFinishDate.setText(dateFin)
-            }
 
             binding.btnAdd.text = requireActivity().resources.getString(R.string.update)
         }
@@ -60,12 +58,12 @@ class EducationAddFragment : Fragment() {
                 var department = etDepartmentName.text.toString().trim()
                 var gano = etGano.text.toString().trim() ?: null
                 var startDate = etStartDate.text.toString().trim()
-                var finishDate = etFinishDate.text.toString().trim() ?: null
+                var finishDate = etFinishDate.text.toString().trim()
 
 
-                if (school.isNotEmpty() && department.isNotEmpty() && startDate.isNotEmpty()) {
+                if (school.isNotEmpty() && department.isNotEmpty() && startDate.isNotEmpty() && finishDate.isNotEmpty()) {
                     if (id != null) {
-                        var item = Education(id, school, department, gano, startDate, finishDate)
+                        var item = Education(id, school, department, startDate, finishDate, gano)
                         update(item)
                     } else {
                         var item = Education(

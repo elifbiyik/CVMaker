@@ -97,6 +97,7 @@
                android:fontFamily="@font/metropolis_regular"
                android:hint="@string/startDate"
                android:inputType="number"
+               android:maxLength="4"
                android:maxLines="1"
                android:textColor="@android:color/black"
                android:textSize="16sp" />
@@ -120,6 +121,7 @@
                android:fontFamily="@font/metropolis_regular"
                android:hint="@string/finishDateExpected"
                android:inputType="number"
+               android:maxLength="4"
                android:maxLines="1"
                android:textColor="@android:color/black"
                android:textSize="14sp" />

@@ -9,16 +9,7 @@ import com.eb.cvmaker.Model.Certificates
 @Dao
 interface CertificatesDao : BaseDao<Certificates>{
 
-/*
-    @Insert
-    override suspend fun insert (info : Certificates)
-
-    @Delete
-    override suspend fun delete (info : Certificates)
-*/
-
     @Query("SELECT *FROM Certificates")
      suspend fun getAllInfo () : List<Certificates>
-
 
 }

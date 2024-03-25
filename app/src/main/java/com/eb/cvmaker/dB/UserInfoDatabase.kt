@@ -13,7 +13,7 @@ import com.eb.cvmaker.Model.SocialMedia
 
 @Database(
     entities = [Abilities::class, Certificates::class, Communication::class, Education::class, Experience::class, Languages::class, References::class, SocialMedia::class],
-    version = 5
+    version = 7
 )
 abstract class UserInfoDatabase : RoomDatabase() {
     abstract fun abilitiesDao(): AbilitiesDao

@@ -22,7 +22,7 @@
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
+        android:id="@+id/btnCreate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -60,15 +60,16 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="410dp"
+        android:layout_height="302dp"
         android:layout_marginTop="32dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2"
-        tools:layout_editor_absoluteX="0dp"
-        tools:listitem="@layout/item_created_templates"
-        tools:ignore="MissingConstraints"></androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCreate"
+        tools:ignore="MissingConstraints"
+        tools:listitem="@layout/item_all_templates"></androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView2"
@@ -81,13 +82,5 @@
         app:layout_constraintBottom_toBottomOf="parent"></com.google.android.gms.ads.AdView>
 
 
-    <Button
-        android:id="@+id/btnCreate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/create"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
-        tools:layout_editor_absoluteX="7dp"></Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

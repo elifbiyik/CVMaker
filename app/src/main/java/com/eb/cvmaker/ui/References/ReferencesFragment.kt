@@ -24,7 +24,7 @@ class ReferencesFragment : Fragment() {
 
     private lateinit var binding: FragmentReferencesBinding
     private val viewModel: ReferencesVM by viewModels()
-    private lateinit var adapter : ReferenceAdapter
+    private lateinit var adapter: ReferenceAdapter
     private lateinit var lottieAnimationView: LottieAnimationView
 
     override fun onCreateView(
@@ -35,7 +35,6 @@ class ReferencesFragment : Fragment() {
         binding = FragmentReferencesBinding.inflate(inflater, container, false)
 
         lottieAnimationView = binding.lottieAnimated
-        lottieAnimationView.setAnimation(R.raw.empty_ghost)
         lottieAnimationView.playAnimation()
         lottieAnimationView.loop(true)
 
@@ -62,21 +61,19 @@ class ReferencesFragment : Fragment() {
                     },
                     {
                         var fr = ReferencesFragment()
-
-                        if (it.name != null && it.surname != null && it.email != null && it.phone != null && it.positionName != null) {
-                            var item = References(
-                                it.id,
-                                it.name,
-                                it.surname,
-                                it.email,
-                                it.phone,
-                                it.positionName
-                            )
-                            showDialog(fr, item)
-                        }
+                        var item = References(
+                            it.id,
+                            it.name,
+                            it.surname,
+                            it.email,
+                            it.phone,
+                            it.positionName
+                        )
+                        showDialog(fr, item)
                     })
 
-                binding.recView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                binding.recView.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 binding.recView.adapter = adapter
             }
         }

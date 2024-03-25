@@ -13,6 +13,7 @@ import com.eb.cvmaker.databinding.FragmentExperienceAddBinding
 import com.eb.cvmaker.message
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
+import com.eb.cvmaker.ui.References.ReferencesFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,15 +36,17 @@ class ExperienceAddFragment : Fragment() {
 
         binding = FragmentExperienceAddBinding.inflate(inflater, container, false)
 
-        if (id != null && nameCom != null && namePos != null &&
-            dateSt != null ) {
+        if (id != null && nameCom != null && namePos != null && dateSt != null) {
 
             val startMonth = dateSt.substring(0, dateSt.indexOf('.'))
             val startYear = dateSt.substring(dateSt.indexOf('.') + 1)
 
-            val finishMonth = dateFin.substring(0, dateFin.indexOf('.'))
-            val finishYear = dateFin.substring(dateFin.indexOf('.') + 1)
-
+            var finishMonth = ""
+            var finishYear = ""
+            if(!dateFin.isNullOrEmpty()) {
+                 finishMonth = dateFin.substring(0, dateFin.indexOf('.'))
+                 finishYear = dateFin.substring(dateFin.indexOf('.') + 1)
+            }
 
             binding.etCompanyName.setText(nameCom)
             binding.etPositionName.setText(namePos)
@@ -64,92 +67,53 @@ class ExperienceAddFragment : Fragment() {
                 var startDate = etStartDateMonth.text.toString() +"."+ etStartDateYear.text.toString()
                 var finishDate :String
 
-               if(!etFinishDateMonth.text.isNullOrEmpty() && !etFinishDateYear.text.isNullOrEmpty()) {
-                   finishDate =
-                       etFinishDateMonth.text.toString() + "." + etFinishDateYear.text.toString()
-               } else {
-                   finishDate = etFinishDateMonth.text.toString() // Boş bırakıldığında (.) yazmasın diye month'u yazdırdık ama monyh yazmayack zaten (continue yazacak)
-               }
-
-                if (id != null) {
-                    update(id, company, position, info, startDate, finishDate)
+                if(!etFinishDateMonth.text.isNullOrEmpty() && !etFinishDateYear.text.isNullOrEmpty()) {
+                    finishDate =
+                        etFinishDateMonth.text.toString() + "." + etFinishDateYear.text.toString()
                 } else {
-                    add(company, position, info, startDate, finishDate)
+                    finishDate = etFinishDateMonth.text.toString() // Boş bırakıldığında (.) yazmasın diye month'u yazdırdık ama month yazmayack zaten (continue yazacak)
                 }
+
+                if (company.isNotEmpty() && position.isNotEmpty() && startDate.isNotEmpty()) {
+                    if (id != null) {
+                        var item = Experience(id, company, position, info, startDate, finishDate)
+                        update (item)
+                    } else {
+                        var item = Experience(
+                            companyName = company, positionName = position, infoAboutJob = info, startDate = startDate, finishDate = finishDate)
+                        add(item)
+                    }
+                } else {
+                    message(
+                        requireContext(),
+                        requireActivity().resources.getString(R.string.messageForEmpty)
+                    )
+                }
+                isSuccessful()
             }
         }
 
         return binding.root
     }
 
-    fun update(
-        id: Int,
-        company: String,
-        position: String,
-        info: String ?= null,
-        startDate: String,
-        finishDate: String
-    ) {
-        if (company.isNotEmpty() && position.isNotEmpty() && startDate.isNotEmpty()) {
+    fun update(userInfo : Experience) {
+        viewModel.updateData(userInfo)
+        isSuccessful()
+    }
 
-            var userInfo = Experience(
-                id = id,
-                companyName = company,
-                positionName = position,
-                startDate = startDate,
-                finishDate = finishDate,
-                infoAboutJob = info
-            )
+    fun add(userInfo : Experience) {
+        viewModel.saveData(userInfo)
+        isSuccessful()
+    }
 
-            if (company.isNotEmpty() && position.isNotEmpty() && startDate.isNotEmpty()) {
-                viewModel.saveData(userInfo)
-            } else {
-                message(
-                    requireContext(),
-                    requireActivity().resources.getString(R.string.messageForEmpty)
-                )
-            }
-
-            observe(viewModel.isSuccessfulMLD) {
+    fun isSuccessful() {
+        observe(viewModel.isSuccessfulMLD) {
+            if (it == true)
                 message(
                     requireContext(),
                     requireActivity().resources.getString(R.string.messageForSaved)
                 )
-                replace(ExperienceFragment())
-            }
-        }
-    }
-
-    fun add(
-        company: String,
-        position: String,
-        info: String ?= null,
-        startDate: String,
-        finishDate: String
-    ) {
-        if (company.isNotEmpty() && position.isNotEmpty() && startDate.isNotEmpty() ) {
-            var userInfo = Experience(
-                companyName = company,
-                positionName = position,
-                startDate = startDate,
-                finishDate = finishDate,
-                infoAboutJob = info
-            )
-            viewModel.saveData(userInfo)
-
-        } else {
-            message(
-                requireContext(),
-                requireActivity().resources.getString(R.string.messageForEmpty)
-            )
-        }
-
-        observe(viewModel.isSuccessfulMLD) {
-            message(
-                requireContext(),
-                requireActivity().resources.getString(R.string.messageForSaved)
-            )
-            replace(ExperienceFragment())
+            replace(ReferencesFragment())
         }
     }
 

@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -22,18 +21,10 @@ import com.eb.cvmaker.R
 import com.eb.cvmaker._paragraphStyle.Styles
 import com.eb.cvmaker.databinding.FragmentChooseTemplateBinding
 import com.eb.cvmaker.message
-import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
-import com.itextpdf.io.image.ImageDataFactory
-import com.itextpdf.io.source.ByteArrayOutputStream
 import com.itextpdf.kernel.geom.PageSize
 import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
-import com.itextpdf.layout.borders.SolidBorder
-import com.itextpdf.layout.element.Image
-import com.itextpdf.layout.element.Paragraph
-import com.itextpdf.layout.element.Text
-import com.itextpdf.layout.property.TextAlignment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
@@ -45,7 +36,7 @@ class Canvas_PDF {
     class ChooseTemplateFragment : Fragment() {
 
         private lateinit var binding: FragmentChooseTemplateBinding
-        private val viewModel: ChooseTemplateViewModel by viewModels()
+        private val viewModel: ChooseTemplateVM by viewModels()
         private lateinit var adapter: ChooseTemplateAdapter
         var style = Styles()
 
@@ -70,7 +61,7 @@ class Canvas_PDF {
                 list = viewModel.getTemplate()
                 var listSize = list.size
 
-                adapter = ChooseTemplateAdapter(requireContext(), listSize, list) { uri, index ->
+                adapter = ChooseTemplateAdapter(list) { uri, index ->
 
                     // Butona tıklandığında seçilen template'e göre generatePDF çalışmalı
                     // O oluşana kadar progressBar dönsün

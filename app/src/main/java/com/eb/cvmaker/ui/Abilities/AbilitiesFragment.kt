@@ -36,7 +36,6 @@ class AbilitiesFragment : Fragment() {
         binding = FragmentAbilitiesBinding.inflate(inflater, container, false)
 
         lottieAnimationView = binding.lottieAnimated
-        lottieAnimationView.setAnimation(R.raw.empty_ghost)
         lottieAnimationView.playAnimation()
         lottieAnimationView.loop(true)
 
@@ -60,7 +59,6 @@ class AbilitiesFragment : Fragment() {
                     {
                         var fr = AbilitiesFragment()
                         var item = Abilities(it.id, it.abilitiesName, it.level)
-
                         showDialog(fr, item)
                     }
                 )

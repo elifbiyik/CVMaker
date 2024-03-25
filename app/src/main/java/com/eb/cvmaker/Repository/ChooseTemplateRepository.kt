@@ -17,12 +17,15 @@ import com.eb.cvmaker.dB.ExperienceDao
 import com.eb.cvmaker.dB.LanguageDao
 import com.eb.cvmaker.dB.ReferencesDao
 import com.eb.cvmaker.dB.SocialMediaDao
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import javax.inject.Inject
 
-class ChooseTemplateRepository @Inject constructor(var storage: FirebaseStorage) {
+class ChooseTemplateRepository @Inject constructor(var storage: FirebaseStorage, var auth: FirebaseAuth) {
 
     @Inject
     lateinit var communicationDao: CommunicationDao
@@ -95,4 +98,14 @@ class ChooseTemplateRepository @Inject constructor(var storage: FirebaseStorage)
         return referencesDao.getAllInfo()
     }
 
+    fun getProfile(): Task<Uri> {
+        val imageReference = auth.currentUser?.let { currentUser ->
+            val uid = currentUser.uid
+            FirebaseStorage.getInstance().reference.child("images/$uid.jpg")
+        }
+
+        return imageReference?.downloadUrl
+            ?: Tasks.forException(NullPointerException("Current user is null"))
+
+    }
 }

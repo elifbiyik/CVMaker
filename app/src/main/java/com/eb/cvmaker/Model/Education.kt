@@ -11,14 +11,14 @@ data class Education(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") var id: Int = 0,
 
-    @ColumnInfo(name = "schoolName", collate = ColumnInfo.NOCASE) var schoolName: String ?= null,
+    @ColumnInfo(name = "schoolName") var schoolName: String ?= null,
 
-    @ColumnInfo(name = "departmentName", collate = ColumnInfo.NOCASE) var departmentName: String ?= null,
+    @ColumnInfo(name = "departmentName") var departmentName: String ?= null,
 
-    @ColumnInfo(name = "startDate", collate = ColumnInfo.NOCASE) var startDate: String ?= null,
+    @ColumnInfo(name = "startDate") var startDate: String ?= null,
 
-    @ColumnInfo(name = "finishDate", collate = ColumnInfo.NOCASE) var finishDate: String ?= null,
+    @ColumnInfo(name = "finishDate") var finishDate: String ?= null,
 
-    @ColumnInfo(name = "gano", collate = ColumnInfo.NOCASE) var gano: String ?= null
+    @ColumnInfo(name = "gano") var gano: String ?= null
 
 )

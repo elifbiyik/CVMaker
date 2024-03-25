@@ -37,7 +37,6 @@ class EducationFragment : Fragment() {
         binding = FragmentEducationBinding.inflate(inflater, container, false)
 
         lottieAnimationView = binding.lottieAnimated
-        lottieAnimationView.setAnimation(R.raw.empty_ghost)
         lottieAnimationView.playAnimation()
         lottieAnimationView.loop(true)
 
@@ -58,36 +57,21 @@ class EducationFragment : Fragment() {
                         bundle.putString("dateSt", it.startDate)
                         bundle.putString("dateFin", it.finishDate)
                         bundle.putString("gano", it.gano)
-
-
-                        /*      var item = Education(
-                                  it.id,
-                                  it.schoolName,
-                                  it.departmentName,
-                                  it.startDate,
-                                  it.finishDate,
-                                  it.gano
-                              )
-                              bundle.putParcelable("education", item as Parcelable)
-      */
-
                         fr.arguments = bundle
                         replace(fr)
                     },
                     {
                         var fr = EducationFragment()
+                        var item = Education(
+                            it.id,
+                            it.departmentName,
+                            it.schoolName,
+                            it.startDate,
+                            it.finishDate,
+                            it.gano
+                        )
+                        showDialog(fr, item)
 
-                        if (it.departmentName != null && it.schoolName != null && it.startDate != null && it.finishDate != null && it.gano != null) {
-                            var item = Education(
-                                it.id,
-                                it.departmentName,
-                                it.schoolName,
-                                it.startDate,
-                                it.finishDate,
-                                it.gano
-                            )
-                            showDialog(fr, item)
-                        }
                     })
 
                 binding.recView.layoutManager =

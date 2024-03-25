@@ -24,7 +24,7 @@ class ExperienceFragment : Fragment() {
 
     private lateinit var binding: FragmentExperienceBinding
     private val viewModel: ExperienceVM by viewModels()
-    private lateinit var adapter : ExperienceAdapter
+    private lateinit var adapter: ExperienceAdapter
     private lateinit var lottieAnimationView: LottieAnimationView
 
     override fun onCreateView(
@@ -35,7 +35,7 @@ class ExperienceFragment : Fragment() {
         binding = FragmentExperienceBinding.inflate(inflater, container, false)
 
         lottieAnimationView = binding.lottieAnimated
-        lottieAnimationView.setAnimation(R.raw.empty_ghost)
+        lottieAnimationView.setAnimation(R.raw.empty_data)
         lottieAnimationView.playAnimation()
         lottieAnimationView.loop(true)
 
@@ -60,20 +60,18 @@ class ExperienceFragment : Fragment() {
                     },
                     {
                         var fr = ExperienceFragment()
-
-                        if (it.companyName != null && it.positionName != null && it.startDate != null && it.infoAboutJob != null ) {
-                            var item = Experience(
-                                it.id,
-                                it.companyName,
-                                it.positionName,
-                                it.startDate,
-                                it.finishDate,
-                                it.infoAboutJob
-                            )
-                            showDialog(fr, item)
-                        }
+                        var item = Experience(
+                            it.id,
+                            it.companyName,
+                            it.positionName,
+                            it.startDate,
+                            it.finishDate,
+                            it.infoAboutJob
+                        )
+                        showDialog(fr, item)
                     })
-                binding.recView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                binding.recView.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 binding.recView.adapter = adapter
             }
         }

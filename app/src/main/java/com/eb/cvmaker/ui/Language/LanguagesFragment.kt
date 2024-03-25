@@ -35,7 +35,6 @@ class LanguagesFragment : Fragment() {
         binding = FragmentLanguagesBinding.inflate(inflater, container, false)
 
         lottieAnimationView = binding.lottieAnimated
-        lottieAnimationView.setAnimation(R.raw.empty_ghost)
         lottieAnimationView.playAnimation()
         lottieAnimationView.loop(true)
 
@@ -59,7 +58,6 @@ class LanguagesFragment : Fragment() {
                     {
                         var fr = LanguagesFragment()
                         var item = Languages(it.id, it.languageName, it.level)
-
                         showDialog(fr, item)
                     }
                 )

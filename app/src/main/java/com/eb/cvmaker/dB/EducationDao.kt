@@ -9,15 +9,6 @@ import com.eb.cvmaker.Model.Education
 @Dao
 interface EducationDao : BaseDao<Education> {
 
-/*
-    @Insert
-    override suspend fun insert(info: Education)
-
-    //   @Query("DELETE FROM Education WHERE id = 1")
-    @Delete
-    override suspend fun delete(info: Education)
-*/
-
     @Query("SELECT *FROM Education")
      suspend fun getAllInfo(): List<Education>
 

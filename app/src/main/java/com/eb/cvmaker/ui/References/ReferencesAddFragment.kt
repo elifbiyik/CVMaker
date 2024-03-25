@@ -1,6 +1,7 @@
 package com.eb.cvmaker.ui.References
 
 import android.os.Bundle
+import android.telephony.PhoneNumberFormattingTextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.viewModels
 import com.eb.cvmaker.Model.References
 import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.FragmentReferencesAddBinding
+import com.eb.cvmaker.formatPhone
 import com.eb.cvmaker.message
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
@@ -35,10 +37,18 @@ class ReferencesAddFragment : Fragment() {
 
         binding = FragmentReferencesAddBinding.inflate(inflater, container, false)
 
-        if (id != null && name != null && surname != null &&
-            email != null && phone != null && position != null
-        ) {
 
+        binding.etPhone.addTextChangedListener(PhoneNumberFormattingTextWatcher("TR"))
+
+        binding.etPhone.setOnClickListener {
+            val formattedNumber = binding.etPhone.text.toString().formatPhone()
+            if (formattedNumber != null) {
+                binding.etPhone.setText(formattedNumber)
+                binding.etPhone.setSelection(binding.etPhone.text.length)
+            }
+        }
+
+        if (id != null && name != null && surname != null) {
             binding.etReferenceName.setText(name)
             binding.etReferenceSurname.setText(surname)
             binding.etEmail.setText(email)
@@ -48,7 +58,6 @@ class ReferencesAddFragment : Fragment() {
             binding.btnAdd.text = requireActivity().resources.getString(R.string.update)
         }
 
-
         with(binding) {
             btnAdd.setOnClickListener {
                 var name = etReferenceName.text.toString()
@@ -57,81 +66,49 @@ class ReferencesAddFragment : Fragment() {
                 var email = etEmail.text.toString()
                 var phone = etPhone.text.toString()
 
-                if (id != null) {
-                    update(id, name, surname, position, email, phone)
-                } else {
-                    add(name, surname, position, email, phone)
+                if (name.isNotEmpty() && surname.isNotEmpty()) {
+                    if (id != null) {
+                        var item = References(id, name, surname, position, email, phone.formatPhone())
+                        update(item)
+                    } else {
+                        var item = References(
+                            name = name,
+                            surname = surname,
+                            positionName = position,
+                            email = email,
+                            phone = phone.formatPhone()
+                        )
+                        add(item)
+                    }
+                }else {
+                    message(
+                        requireContext(),
+                        requireActivity().resources.getString(R.string.messageForEmpty)
+                    )
                 }
+                isSuccessful()
             }
         }
-
         return binding.root
-
-
     }
 
-    fun update(
-        id: Int,
-        name: String,
-        surname: String,
-        position: String,
-        email: String,
-        phone: String
-    ) {
-        if (name.isNotEmpty() && surname.isNotEmpty() && position.isNotEmpty() && email.isNotEmpty() && phone.isNotEmpty()) {
-
-            var userInfo = References(
-                id = id,
-                name = name,
-                surname = surname,
-                positionName = position,
-                email = email,
-                phone = phone
-            )
-
-            viewModel.updateData(userInfo)
-
-        } else {
-            message(
-                requireContext(),
-                requireActivity().resources.getString(R.string.messageForEmpty)
-            )
-        }
-
-        observe(viewModel.isSuccessfulMLD) {
-            message(
-                requireContext(),
-                requireActivity().resources.getString(R.string.messageForSaved)
-            )
-            replace(ReferencesFragment())
-        }
+    fun update(userInfo : References) {
+        viewModel.updateData(userInfo)
+        isSuccessful()
     }
 
-    fun add(name: String, surname: String, position: String, email: String, phone: String) {
+    fun add(userInfo : References) {
+        viewModel.saveData(userInfo)
+        isSuccessful()
+    }
 
-        if (name.isNotEmpty() && surname.isNotEmpty() && position.isNotEmpty() && position.isNotEmpty() && phone.isNotEmpty()) {
-
-            var userInfo = References(
-                name = name,
-                surname = surname,
-                positionName = position,
-                email = email,
-                phone = phone
-            )
-            viewModel.saveData(userInfo)
-
-        } else {
-            message(
-                requireContext(),
-                requireActivity().resources.getString(R.string.messageForEmpty)
-            )
-        }
-
+    fun isSuccessful() {
         observe(viewModel.isSuccessfulMLD) {
-            message(
-                requireContext(),
-                requireActivity().resources.getString(R.string.messageForSaved)
-            )
+            if (it == true)
+                message(
+                    requireContext(),
+                    requireActivity().resources.getString(R.string.messageForSaved)
+                )
             replace(ReferencesFragment())
         }
     }

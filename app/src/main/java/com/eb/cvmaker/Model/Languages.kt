@@ -10,8 +10,8 @@ data class Languages(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") var id: Int = 0,
 
-    @ColumnInfo(name = "languageName", collate = ColumnInfo.NOCASE) var languageName: String ?= null,
+    @ColumnInfo(name = "languageName") var languageName: String ?= null,
 
-    @ColumnInfo(name = "level", collate = ColumnInfo.NOCASE) var level: String ?= null
+    @ColumnInfo(name = "level") var level: String ?= null
 
     )

@@ -22,9 +22,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CertificatesFragment : Fragment() {
 
-    private lateinit var binding : FragmentCertificatesBinding
+    private lateinit var binding: FragmentCertificatesBinding
     private val viewModel: CertificatesVM by viewModels()
-    private lateinit var adapter : CertificatesAdapter
+    private lateinit var adapter: CertificatesAdapter
     private lateinit var lottieAnimationView: LottieAnimationView
 
     override fun onCreateView(
@@ -35,7 +35,6 @@ class CertificatesFragment : Fragment() {
         binding = FragmentCertificatesBinding.inflate(inflater, container, false)
 
         lottieAnimationView = binding.lottieAnimated
-        lottieAnimationView.setAnimation(R.raw.empty_ghost)
         lottieAnimationView.playAnimation()
         lottieAnimationView.loop(true)
 
@@ -62,20 +61,19 @@ class CertificatesFragment : Fragment() {
                     {
                         var fr = CertificatesAddFragment()
 
-                        if (it.certificateProjectOrAwardName != null && it.aboutCertificate != null && it.startDate != null && it.finishDate != null && it.educationPlace != null) {
-                            var item = Certificates(
-                                it.id,
-                                it.certificateProjectOrAwardName,
-                                it.aboutCertificate,
-                                it.startDate,
-                                it.finishDate,
-                                it.educationPlace
-                            )
-                            showDialog(fr, item)
-                        }
+                        var item = Certificates(
+                            it.id,
+                            it.certificateProjectOrAwardName,
+                            it.aboutCertificate,
+                            it.startDate,
+                            it.finishDate,
+                            it.educationPlace
+                        )
+                        showDialog(fr, item)
                     })
 
-                binding.recView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                binding.recView.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 binding.recView.adapter = adapter
             }
         }

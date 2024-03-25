@@ -18,19 +18,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
-class ChooseTemplateViewModel @Inject constructor(var repository: ChooseTemplateRepository) :
+class ChooseTemplateVM @Inject constructor(var repository: ChooseTemplateRepository) :
     ViewModel() {
-
-    var communicationMLD = MutableLiveData<List<Communication>>()
-    var educationMLD = MutableLiveData<List<Education>>()
-    var socialMediaMLD = MutableLiveData<List<SocialMedia>>()
-    var experienceMLD = MutableLiveData<List<Experience>>()
-    var languageMLD = MutableLiveData<List<Languages>>()
-    var certificateMLD = MutableLiveData<List<Certificates>>()
-    var abilitiesMLD = MutableLiveData<List<Abilities>>()
-    var referencesMLD = MutableLiveData<List<References>>()
-
 
     init {
         getCommunication()
@@ -43,13 +34,23 @@ class ChooseTemplateViewModel @Inject constructor(var repository: ChooseTemplate
         getReferences()
     }
 
+    var communicationMLD = MutableLiveData<List<Communication>>()
+    var educationMLD = MutableLiveData<List<Education>>()
+    var socialMediaMLD = MutableLiveData<List<SocialMedia>>()
+    var experienceMLD = MutableLiveData<List<Experience>>()
+    var languageMLD = MutableLiveData<List<Languages>>()
+    var certificateMLD = MutableLiveData<List<Certificates>>()
+    var abilitiesMLD = MutableLiveData<List<Abilities>>()
+    var referencesMLD = MutableLiveData<List<References>>()
+    var profilePhotoMLD = MutableLiveData<Uri>()
+
 
     suspend fun getTemplate(): ArrayList<Uri> {
         var response = repository.getAllTemplate()
         return response
     }
 
-     fun getCommunication() {
+    fun getCommunication() {
         viewModelScope.launch(Dispatchers.Main) {
             var response = repository.getCommunication()
             communicationMLD.value = response
@@ -104,7 +105,4 @@ class ChooseTemplateViewModel @Inject constructor(var repository: ChooseTemplate
             referencesMLD.value = response
         }
     }
-
-
-
 }

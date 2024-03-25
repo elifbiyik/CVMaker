@@ -1,41 +1,40 @@
 package com.eb.cvmaker.ui._Create
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.eb.cvmaker.databinding.FragmentShowPdfBinding
 import com.eb.cvmaker.message
-import com.eb.cvmaker.ui.VM
-import com.github.barteksc.pdfviewer.PDFView
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import java.io.FileInputStream
+import java.io.IOException
+
 
 @AndroidEntryPoint
 class ShowPDFFragment : Fragment() {
 
 
     private lateinit var binding: FragmentShowPdfBinding
-    private val viewModel: VM by viewModels()
+    val viewModel: ShowPDFVM by viewModels()
 
-  //  var pdfFilePath: String? = null
+    var FILENAME = "CV.pdf"
+    //  var pdfFilePath: String? = null
 
-   /* var pageHeight = 1120
-    var pageWidth = 792
+    /* var pageHeight = 1120
+     var pageWidth = 792
 
-    // creating a bitmap variable
-    // for storing our images
-    lateinit var bmp: Bitmap
-    lateinit var scaledbmp: Bitmap
-    var PERMISSION_CODE = 101*/
+     // creating a bitmap variable
+     // for storing our images
+     lateinit var bmp: Bitmap
+     lateinit var scaledbmp: Bitmap
+     var PERMISSION_CODE = 101*/
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,58 +53,52 @@ class ShowPDFFragment : Fragment() {
         binding = FragmentShowPdfBinding.inflate(inflater, container, false)
 
         var pdfFilePath = arguments?.getString("path")
-/*
-        Log.d("ShowPDF", "Ok")
-  //      val file: File = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "GFG.pdf")
-        val file = File(Environment.getExternalStorageDirectory().absolutePath + "/" + "GFG.pdf")
 
 
-        if (file.exists()) {
-         //   val inputStream = FileInputStream(file)
-      //      pdfView.fromStream(inputStream).load()
-            binding.PdfViewer.fromFile(file).load()
+        binding.save.setOnClickListener {
 
-        } else {
-            message(requireContext(), "Hata")
+            pdfFilePath?.let { it1 -> savePDF(it1) }
+
+            // -----------------
+            /*    val downloadManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+
+
+                val request = DownloadManager.Request(uri)
+                    .setTitle(FILENAME)
+                    .setDescription("Downloading")
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    .setAllowedOverMetered(true)
+                    .setAllowedOverRoaming(true)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, FILENAME)
+                }
+
+                downloadManager.enqueue(request)
+    */
+
+            message(requireContext(), "Download : ${pdfFilePath}")
+
         }
 
 
-*/
+        binding.share.setOnClickListener {
 
-/*
+            pdfFilePath?.let { it1 -> sharePDF(it1) }
+        }
 
-        val file = File(
-            context?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
-          //  "GFG.pdf"
-        "example_cv.pdf"
-        )
-
-
-
-        val input = FileInputStream(file)
-        pdfView.fromStream(input).load()
-
-        val uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/" + "GFG.pdf")
-        val inputStream = context?.contentResolver?.openInputStream(uri)
-        pdfView.fromStream(inputStream).load()
-
-
-*/
-
-        message(requireContext(), "ShowPDF")
 
 
         pdfFilePath?.let {
             val file = File(it)
             if (file.exists()) {
                 loadPdfFromPath(it)
-                message(requireContext(), "PDF var")
 
             } else {
                 message(requireContext(), "PDF yok")
             }
         }
-        message(requireContext(), "PDF null")
 
         return binding.root
     }
@@ -113,121 +106,50 @@ class ShowPDFFragment : Fragment() {
     fun loadPdfFromPath(filePath: String) {
         binding.PdfViewer.fromFile(File(filePath))
             .defaultPage(0)
-            .enableSwipe(true)
+            .enableSwipe(true) // kaydırmayı kullanarak değişen sayfaları engellemeye izin verir
             .swipeHorizontal(false)
-            .onPageChange { page, pageCount -> /* handle page change */ }
-            .load()
+    //        .onPageChange { page, pageCount -> /* handle page change */ }
+            .enableAntialiasing(true) // düşük çözünürlüklü ekranlarda görüntü oluşturmayı biraz iyileştirin
+            .load() // PDF dosyasını yükler ve görüntüler.
     }
 
- /*   fun generatePDF() {
-        var pdfDocument = PdfDocument()
+    fun savePDF(filePath: String) {
+        val sourceFile = File(filePath)
 
-        //  grafiksel şekiller ve metin çizmek için kullanılan bir araçtır.
-        var paint: Paint = Paint()
-        var title: Paint = Paint()
+        // Kaydetme yapılacak dizin belirlenir.
+        val downloadsDirectory =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
 
-// 1 sayfa olduğunu belirterek bir PDF sayfasının bilgilerini tanımlar
-        var myPageInfo: PdfDocument.PageInfo? =
-            PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
-
-
-        var myPage: PdfDocument.Page = pdfDocument.startPage(myPageInfo)
-
-//  grafiksel içerik oluşturmak için kullanılan bir çizim tahtasıdır.
-        var canvas: Canvas = myPage.canvas
-
-
-        canvas.drawBitmap(scaledbmp, 56F, 40F, paint)
-
-        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL))
-
-        title.textSize = 15F
-        title.setColor(ContextCompat.getColor(requireContext(), R.color.red))
-
-        canvas.drawText("A portal for IT professionals.", 209F, 100F, title)
-        canvas.drawText("Geeks for Geeks", 209F, 80F, title)
-        title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL))
-        title.setColor(ContextCompat.getColor(requireContext(), R.color.red))
-        title.textSize = 15F
-
-        title.textAlign = Paint.Align.CENTER
-        canvas.drawText("This is sample document which we have created.", 396F, 560F, title)
-
-        pdfDocument.finishPage(myPage)
-        // Şuan pdf Oluştu!
-
-
-    //    val file: File = File(Environment.getExternalStorageDirectory(), "GFG.pdf")
-   //     val file: File = File(requireActivity().getExternalFilesDir(null), "GFG.pdf")
-
-        // Pdf'in kayıt olacağı path (file/download)
-        val file: File = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "GFG.pdf")
+        // Kaydedilecek dosyanın adı belirlenir.
+        val destinationFile = File(downloadsDirectory, FILENAME)
 
         try {
-//pdfDocument: Bellekteki PDF belgenizin içeriğini tutar.
-// FileOutputStream(file): PDF'nizin içeriğini file tarafından belirtilen konuma yazmak için kullanılan bir çıktı akışıdır.
-            pdfDocument.writeTo(FileOutputStream(file)) // PDF belgesini bellekte oluşturup dosya sistemine yazar.
-
-            message(requireContext(), "PDF file generated..")
-        } catch (e: Exception) {
-
-            var mes = e.printStackTrace()
-
-            message(requireContext(), "Fail to generate PDF file..")
-            Log.d("!!!! HATA", mes.toString())
+            // PDF dosyasını kopyala.
+           // overwrite =  varsa hedef dosyanın üzerine yazılmasına izin verir
+            sourceFile.copyTo(destinationFile, overwrite = true)
+            // Başarıyla kaydedildiğine dair bir mesaj gösterilebilir.
+           message(requireContext(),"PDF saved successfully to Downloads folder!")
+        } catch (e: IOException) {
+            // Eğer bir hata olursa, kullanıcıya uygun bir hata mesajı gösterilebilir.
+            e.printStackTrace()
+            message(requireContext(), "Failed to save PDF!")
         }
-
-        pdfDocument.close()
-
     }
 
-    fun checkPermissions(): Boolean {
-
-        var writeStoragePermission = ContextCompat.checkSelfPermission(
-            requireActivity().applicationContext,
-            WRITE_EXTERNAL_STORAGE
+    fun sharePDF(filePath: String) {
+        val pdfFile = File(filePath)
+        val uri = FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.provider",
+            pdfFile
         )
 
-        var readStoragePermission = ContextCompat.checkSelfPermission(
-            requireActivity().applicationContext,
-            READ_EXTERNAL_STORAGE
-        )
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "application/pdf"
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-        return writeStoragePermission == PackageManager.PERMISSION_GRANTED
-                && readStoragePermission == PackageManager.PERMISSION_GRANTED
+        startActivity(Intent.createChooser(shareIntent, "Share PDF"))
     }
 
-    fun requestPermission() {
-
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE), PERMISSION_CODE
-        )
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-
-        if (requestCode == PERMISSION_CODE) {
-
-            if (grantResults.size > 0) {
-
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1]
-                    == PackageManager.PERMISSION_GRANTED
-                ) {
-
-                    message(requireContext(), "Permission Granted..")
-
-                } else {
-                    message(requireContext(), "Permission Denied..")
-       //             finish()
-                }
-            }
-        }
-    }*/
 }

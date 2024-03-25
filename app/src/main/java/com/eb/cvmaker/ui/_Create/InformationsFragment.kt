@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import com.eb.cvmaker.databinding.FragmentInformationsBinding
 import com.eb.cvmaker.replace
 import com.eb.cvmaker.ui.Abilities.AbilitiesFragment
@@ -12,6 +13,7 @@ import com.eb.cvmaker.ui.Certificates.CertificatesFragment
 import com.eb.cvmaker.ui.Communication.CommunicationFragment
 import com.eb.cvmaker.ui.Education.EducationFragment
 import com.eb.cvmaker.ui.Experience.ExperienceFragment
+import com.eb.cvmaker.ui.HomePageFragment
 import com.eb.cvmaker.ui.Language.LanguagesFragment
 import com.eb.cvmaker.ui.References.ReferencesFragment
 import com.eb.cvmaker.ui.SocialMedia.SocialMediaFragment
@@ -79,4 +81,12 @@ class InformationsFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            replace(HomePageFragment())
+        }
+    }
+
 }
