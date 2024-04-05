@@ -87,6 +87,14 @@ class Styles {
             .setFont(pdfFontCalibriItalic)
     }
 
+    fun template_1_Calibri_Bold_9f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(0, 0, 0))
+            .setFontSize(9f)
+            .setFont(pdfFontCalibri)
+            .setBold()
+    }
+
     fun template_1_CalibriBold_11f(): Style? {
         return Style()
             .setFontColor(DeviceRgb(0, 0, 0))
@@ -94,6 +102,12 @@ class Styles {
             .setFont(pdfFontCalibriBold)
     }
 
+    fun template_1_Calibri_9f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(0, 0, 0))
+            .setFontSize(9f)
+            .setFont(pdfFontCalibri)
+    }
 
     fun template_2_Name_Surname(): Style? {
         return Style()
@@ -145,6 +159,13 @@ class Styles {
             .setFont(pdfFontArial)
     }
 
+    fun template_2_Arial_905f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(0, 0, 0))
+            .setFontSize(9.5f)
+            .setFont(pdfFontArial)
+    }
+
     fun template_2_Arial_10f(): Style? {
         return Style()
             .setFontColor(DeviceRgb(0, 0, 0))
@@ -180,97 +201,5 @@ class Styles {
             .setFontSize(10f)
             .setFont(pdfFontArial)
     }
-
-    /*
-        fun styleTemplate2ForName(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(255, 255, 255))
-                .setFont(pdfFontLight_Mukta)
-                .setFontSize(30f) // punto büyüklüğü
-                .setBold()
-        }
-
-        fun styleTemplate2ForSurname(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(255, 255, 255))
-                .setFont(pdfFontBold_Mukta)
-                .setFontSize(30f) // punto büyüklüğü
-                .setBold()
-        }
-
-        fun styleTemplate2ForJob(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(255, 255, 255))
-                .setFont(pdfFontLight_Mukta)
-                .setFontSize(20f) // punto büyüklüğü
-        }
-
-        fun styleTemplate2ForTitle(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(0, 0, 0))
-                .setFontSize(15f) // punto büyüklüğü
-                .setFont(pdfFontMedium_Mukta)
-        }
-
-        fun styleTemplate2ForText(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(0, 0, 0))
-                .setFont(pdfFontExtraLight_Mukta)
-                .setFontSize(12f) // punto büyüklüğü
-        }
-
-        fun styleTemplate2ForTextBold(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(0, 0, 0))
-                .setFont(pdfFontLight_Mukta)
-                .setFontSize(12f)
-                .setBold()
-        }
-
-        fun styleTemplate2ForTextLight(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(0, 0, 0))
-                .setFontSize(12f)
-                .setFont(pdfFontLight_Mukta)
-                .setFontSize(12f)
-        }
-
-        fun styleTemplate2ForTextMedium(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(0, 0, 0))
-                .setFontSize(12f)
-                .setFont(pdfFontMedium_Mukta)
-        }
-
-        fun styleTemplate2ForTextMediumGray(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(160, 160, 160))
-                .setFontSize(8f)
-                .setFont(pdfFontMedium_Mukta)
-        }
-
-        fun styleTemplate2ForText10f(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(0, 0, 0))
-                .setFont(pdfFontExtraLight_Mukta)
-                .setFontSize(10f)
-        }
-
-        fun styleTemplate2ForText8fBold(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(0, 0, 0))
-                .setFont(pdfFontSemiBold_Mukta)
-                .setFontSize(8f)
-        }
-
-        fun styleTemplate2ForText8f(): Style? {
-            return Style()
-                .setFontColor(DeviceRgb(0, 0, 0))
-                .setFont(pdfFontExtraLight_Mukta)
-                .setFontSize(8f)
-        }
-
-
-    */
 
 }

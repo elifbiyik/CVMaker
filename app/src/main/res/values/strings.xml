@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">CVMaker</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="delete">Delete</string>
 
@@ -15,17 +13,14 @@
     <string name="References">REFERENCES</string>
     <string name="SocialMedia">SOCIAL MEDIA</string>
 
-
     <!-- Abilities -->
     <string name="abilitiesName">Abilities Name * </string>
     <string name="level">level</string>
-
     <string name="empty">Empty</string>
     <string name="basis">Basis</string>
     <string name="average">Average</string>
     <string name="advanced">Advanced</string>
     <string name="expert">Expert</string>
-
 
     <!-- Certificates -->
     <string name="certificateProjectOrAwardName">Certificate, Project or Award Name * </string>
@@ -33,7 +28,6 @@
     <string name="startDate">Start Date * </string>
     <string name="finishDate">Finish Date * </string>
     <string name="aboutCertificate">About Certificate</string>
-
 
     <!-- Communication -->
     <string name="name">Name * </string>
@@ -48,13 +42,11 @@
     <string name="drivingLicence">Driving Licence</string>
     <string name="military">Military</string>
 
-
     <!-- Education -->
     <string name="schoolName">School Name * </string>
-    <string name="departmentName">Department Name * </string>
+    <string name="departmentName">Department Name</string>
     <string name="gano">GANO</string>
     <string name="finishDateExpected">Finish Date (expected) * </string>
-
 
     <!-- Experience -->
     <string name="companyName">Company Name * </string>
@@ -76,18 +68,16 @@
     <!-- References -->
     <string name="position">Position</string>
 
-
     <string name="optional">Optional</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="create">Create CV</string>
 
-
     <string name="note">Note : </string>
     <string name="noteMessage"> If you are continuing, you can leave the finish date blank. </string>
-    <string name="continueEx">Present</string>
-
+    <string name="present">Present</string>
+    <string name="maxLength">maxLength : 150</string>
 
     <string name="messageForEmpty">Empty fields must be filled</string>
     <string name="messageForSaved">Saved Successfully</string>
@@ -99,9 +89,7 @@
     <string name="messageForDelete">Has been deleted! </string>
     <string name="buttonForOK">OK</string>
 
-
     <string name="template">TEMPLATES</string>
-
 
     <string name="CV">Created CV</string>
     <string name="dots">\u00A0 : \u00A0</string>
@@ -110,7 +98,6 @@
     <string name="verticaLine">\u00A0 | \u00A0</string>
 
     <string name="emptyNameAndSurname">You should not leave the name and surname field blank.</string>
-
 
     <string name="contact">CONTACT</string>
     <string name="skills">SKILLS</string>
@@ -121,4 +108,7 @@
     <string name="alert_No">No</string>
     <string name="alert_Yes">Yes</string>
 
+
+
+    <string name="sampleTemplate">SampleTemplate</string>
 </resources>

@@ -24,14 +24,7 @@ class ChooseTemplateVM @Inject constructor(var repository: ChooseTemplateReposit
     ViewModel() {
 
     init {
-        getCommunication()
-        getEducation()
-        getSocialMedia()
-        getExperience()
-        getLanguage()
-        getCertificates()
-        getAbilities()
-        getReferences()
+        getData()
     }
 
     var communicationMLD = MutableLiveData<List<Communication>>()
@@ -42,67 +35,22 @@ class ChooseTemplateVM @Inject constructor(var repository: ChooseTemplateReposit
     var certificateMLD = MutableLiveData<List<Certificates>>()
     var abilitiesMLD = MutableLiveData<List<Abilities>>()
     var referencesMLD = MutableLiveData<List<References>>()
-    var profilePhotoMLD = MutableLiveData<Uri>()
-
 
     suspend fun getTemplate(): ArrayList<Uri> {
         var response = repository.getAllTemplate()
         return response
     }
-
-    fun getCommunication() {
+    private fun getData() {
         viewModelScope.launch(Dispatchers.Main) {
-            var response = repository.getCommunication()
-            communicationMLD.value = response
+            communicationMLD.value = repository.getCommunication()
+            educationMLD.value = repository.getEducation()
+            socialMediaMLD.value = repository.getSocialMedia()
+            experienceMLD.value = repository.getExperience()
+            languageMLD.value = repository.getLanguage()
+            certificateMLD.value = repository.getCertificates()
+            abilitiesMLD.value = repository.getAbilities()
+            referencesMLD.value = repository.getReferences()
         }
     }
 
-    fun getEducation() {
-        viewModelScope.launch(Dispatchers.Main) {
-            var response = repository.getEducation()
-            educationMLD.value = response
-        }
-    }
-
-    fun getSocialMedia() {
-        viewModelScope.launch(Dispatchers.Main) {
-            var response = repository.getSocialMedia()
-            socialMediaMLD.value = response
-        }
-    }
-
-    fun getExperience() {
-        viewModelScope.launch(Dispatchers.Main) {
-            var response = repository.getExperience()
-            experienceMLD.value = response
-        }
-    }
-
-    fun getLanguage() {
-        viewModelScope.launch(Dispatchers.Main) {
-            var response = repository.getLanguage()
-            languageMLD.value = response
-        }
-    }
-
-    fun getCertificates() {
-        viewModelScope.launch(Dispatchers.Main) {
-            var response = repository.getCertificates()
-            certificateMLD.value = response
-        }
-    }
-
-    fun getAbilities() {
-        viewModelScope.launch(Dispatchers.Main) {
-            var response = repository.getAbilities()
-            abilitiesMLD.value = response
-        }
-    }
-
-    fun getReferences() {
-        viewModelScope.launch(Dispatchers.Main) {
-            var response = repository.getReferences()
-            referencesMLD.value = response
-        }
-    }
 }

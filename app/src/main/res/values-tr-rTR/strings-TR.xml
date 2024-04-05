@@ -1,0 +1,113 @@
+<resources>
+    <string name="app_name">CV Oluşturucu</string>
+
+    <string name="delete">Sil</string>
+
+    <!-- Başlık -->
+    <string name="Abilities">YETENEKLER</string>
+    <string name="Certificates">SERTİFİKALAR</string>
+    <string name="Communication">İLETİŞİM</string>
+    <string name="Education">EĞİTİM</string>
+    <string name="Experience">DENEYİM</string>
+    <string name="Languages">DİLLER</string>
+    <string name="References">REFERANSLAR</string>
+    <string name="SocialMedia">SOSYAL MEDYA</string>
+
+    <!-- Beceriler -->
+    <string name="abilitiesName">Yetenek Adı * </string>
+    <string name="level">Seviye</string>
+    <string name="empty">Boş</string>
+    <string name="basis">Temel</string>
+    <string name="average">Orta</string>
+    <string name="advanced">Gelişmiş</string>
+    <string name="expert">Uzman</string>
+
+    <!-- Sertifikalar -->
+    <string name="certificateProjectOrAwardName">Sertifika, Proje veya Ödül Adı * </string>
+    <string name="educationPlace">Eğitim Yeri * </string>
+    <string name="startDate">Başlangıç Tarihi * </string>
+    <string name="finishDate">Bitiş Tarihi * </string>
+    <string name="aboutCertificate">Sertifika Hakkında</string>
+
+    <!-- İletişim -->
+    <string name="name">İsim * </string>
+    <string name="surname">Soyisim * </string>
+    <string name="job">Meslek</string>
+    <string name="email">E-posta</string>
+    <string name="phone">Telefon</string>
+    <string name="aboutMe">Hakkımda</string>
+    <string name="address">Adres</string>
+    <string name="birtday">Doğum Günü</string>
+    <string name="gender">Cinsiyet</string>
+    <string name="drivingLicence">Sürücü Belgesi</string>
+    <string name="military">Askerlik Durumu</string>
+
+    <!-- Eğitim -->
+    <string name="schoolName">Okul Adı * </string>
+    <string name="departmentName">Bölüm Adı</string>
+    <string name="gano">GANO</string>
+    <string name="finishDateExpected">Bitiş Tarihi (tahmini) * </string>
+
+    <!-- Deneyim -->
+    <string name="companyName">Şirket Adı * </string>
+    <string name="positionName">Pozisyon Adı * </string>
+    <string name="infoAboutJob">İş Hakkında Bilgi</string>
+    <string name="startMonthDate">Başlangıç Tarihi (Ay) * </string>
+    <string name="startYearDate">Başlangıç Tarihi (Yıl) * </string>
+    <string name="finishMonthDate">Bitiş Tarihi (Ay)</string>
+    <string name="finishYearDate">Bitiş Tarihi (Yıl)</string>
+
+    <!-- Diller -->
+    <string name="languageName">Dil Adı * </string>
+
+    <!-- Sosyal Medya -->
+    <string name="linkedIn">LinkedIn</string>
+    <string name="github">Github</string>
+    <string name="webSites">Web Siteleri</string>
+
+    <!-- Referanslar -->
+    <string name="position">Pozisyon</string>
+
+    <string name="optional">İsteğe Bağlı</string>
+    <string name="save">Kaydet</string>
+    <string name="add">Ekle</string>
+    <string name="update">Güncelle</string>
+    <string name="create">CV Oluştur</string>
+
+    <string name="note">Not : </string>
+    <string name="noteMessage">Devam ediyorsanız, bitiş tarihini boş bırakabilirsiniz. </string>
+    <string name="present">Devam Ediyor</string>
+    <string name="maxLength">maksimum : 150</string>
+
+    <string name="messageForEmpty">Boş alanların doldurulması gerekmektedir</string>
+    <string name="messageForSaved">Başarıyla Kaydedildi</string>
+
+    <string name="titleForAlert">"Emin misiniz?"</string>
+    <string name="messageForAlert">Silmek istediğinizden emin misiniz ? </string>
+    <string name="buttonForAlert">Evet, sil!</string>
+    <string name="titleForDelete">Silindi! </string>
+    <string name="messageForDelete">Silindi! </string>
+    <string name="buttonForOK">Tamam</string>
+
+    <string name="template">ŞABLONLAR</string>
+
+    <string name="CV">Oluşturulan CV</string>
+    <string name="dots">\u00A0 : \u00A0</string>
+    <string name="line">\u00A0 - \u00A0</string>
+    <string name="space">\u00A0</string>
+    <string name="verticaLine">\u00A0 | \u00A0</string>
+
+    <string name="emptyNameAndSurname">İsim ve soyisim alanlarını boş bırakmamalısınız.</string>
+
+    <string name="contact">İLETİŞİM</string>
+    <string name="skills">YETENEKLER</string>
+    <string name="summary">PROFİL ÖZETİ</string>
+
+    <string name="alert_exit">Çıkış</string>
+    <string name="alert_logOut">Çıkış yapmak istiyor musunuz?</string>
+    <string name="alert_No">Hayır</string>
+    <string name="alert_Yes">Evet</string>
+
+    <string name="sampleTemplate">Örnek Şablon</string>
+
+</resources>

@@ -4,10 +4,15 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.telephony.PhoneNumberFormattingTextWatcher
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +28,11 @@ import com.eb.cvmaker.message
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
 import com.eb.cvmaker.ui._Create.InformationsFragment
+import com.itextpdf.layout.element.Image
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.ByteArrayOutputStream
 
 
 @AndroidEntryPoint
@@ -83,11 +92,11 @@ class CommunicationFragment : Fragment() {
                 binding.btnApprove.setOnClickListener {
                     if (!binding.etUsername.text.isNullOrEmpty() && !binding.etSurname.text.isNullOrEmpty()) {
                         update(getUserTexts(user.image).copy(id = user.id))
+                        replace(InformationsFragment())
                     } else {
                         message(requireContext(), requireActivity().resources.getString(R.string.emptyNameAndSurname)
                         )
                     }
-                    replace(InformationsFragment())
                 }
             } else {
                 getUserHintTexts()
@@ -95,11 +104,11 @@ class CommunicationFragment : Fragment() {
 
                     if (!binding.etUsername.text.isNullOrEmpty() && !binding.etSurname.text.isNullOrEmpty()) {
                         add(getUserTexts())
+                        replace(InformationsFragment())
                     } else {
                         message(requireContext(), requireActivity().resources.getString(R.string.emptyNameAndSurname)
                         )
                     }
-                    replace(InformationsFragment())
                 }
             }
         }
@@ -255,6 +264,11 @@ class CommunicationFragment : Fragment() {
         }
     }
 
+    // ACTION_PICK -> Galeri, dosya yöneticisi .....
+    // ACTION_PICK -> Direkt dosya yöneticisi açılır.
+    // startActivityForResult -> Galeri seçiminin sonucunu alır. (Uri bilgsini)
+    // MIME türü image/ ile başlayan tüm dosya türlerini içerir.
+
     private fun userProfile() {
         val intent = Intent(Intent.ACTION_PICK) //ACTION_GET_CONTENT
         intent.type = "image/*" //"*/*"  // Tüm dosya türlerini seçmek için
@@ -264,10 +278,38 @@ class CommunicationFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
+            data?.let {
+                if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                    val result = CropImage.getActivityResult(data)
+                    val croppedUri = result.uri
+
+                    binding.imProfile.setImageURI(croppedUri)
+                    imageUri = croppedUri!!
+                    val filePath = croppedUri.path
+                        //getRealPathFromUri(croppedUri)
+
+                    var sharedPreferences =
+                        requireContext().getSharedPreferences("userImage", AppCompatActivity.MODE_PRIVATE)
+                    var editor = sharedPreferences.edit()
+                    editor.putString("imagePath", filePath)
+                    editor.apply()
+                } else {
+                    val uri = data.data
+                    uri?.let { it1 -> cropImages(it1) } // Kullanıcı resim seçimi işlemi tamamlanmışsa kırpma işlemine geç
+                }
+            }
+        }
+    }
+
+
+  /*  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
-                binding.imProfile.setImageURI(uri)
-                imageUri = uri!!
+
+                cropImages(uri)
 
                 val filePath = getRealPathFromUri(uri)
 
@@ -280,6 +322,19 @@ class CommunicationFragment : Fragment() {
             }
         }
     }
+*/
+
+    fun cropImages (uri : Uri) {
+        CropImage.activity(uri)
+            .setGuidelines(CropImageView.Guidelines.ON)
+            .setAspectRatio(100, 100)
+            .setCropShape(CropImageView.CropShape.OVAL)
+            .setFixAspectRatio(true) // En boy oranını kilitle
+            .setMinCropResultSize(900, 900) // Minimum kırpma sonucu boyutu
+            .setMaxCropResultSize(900, 900) // Maksimum kırpma sonucu boyutu
+            .start(requireContext(), this)
+    }
+
 
     private fun getRealPathFromUri(uri: Uri): String? {
         val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
@@ -293,42 +348,7 @@ class CommunicationFragment : Fragment() {
         return null
     }
 
-    fun userProfilee() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Select Image")
-        builder.setMessage("Choose your option")
 
-        builder.setPositiveButton("Gallery") { dialog, which ->
-            dialog.dismiss()
-
-            val intent =
-                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent, REQUEST_IMAGE_GALLERY)
-
-        }
-
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
-    // ACTION_PICK -> belirli bir içerik türünü ve belirli bir veri türünü seçmek için kullanıl
-    // MediaStore.Images.Media.EXTERNAL_CONTENT_URI -> Galeriden seçmek için
-    // startActivityForResult -> Galeri seçiminin sonucunu alırız. (Uri bilgsini)
-
- /*   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                REQUEST_IMAGE_GALLERY -> {
-                    val selectedImageUri: Uri? = data?.data  //Seçilen resmin urisi alınır
-                    binding.imProfile.setImageURI(selectedImageUri)
-                    imageUri = selectedImageUri!!
-
-                }
-            }
-        }
-    }
-
-*/
 
 }
 

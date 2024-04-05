@@ -123,6 +123,8 @@ dependencies {
 
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.36'
 
+// Crop
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
 
 }

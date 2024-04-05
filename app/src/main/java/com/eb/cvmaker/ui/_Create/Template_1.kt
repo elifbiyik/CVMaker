@@ -7,10 +7,9 @@ import com.eb.cvmaker.R
 import com.eb.cvmaker._paragraphStyle.Images
 import com.eb.cvmaker._paragraphStyle.Styles
 import com.eb.cvmaker.addText
-import com.eb.cvmaker.addValueCell
 import com.eb.cvmaker.addValueSameCell
+import com.eb.cvmaker.createLineParagraph
 import com.eb.cvmaker.emptyCell
-import com.eb.cvmaker.line
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.title
 import com.itextpdf.layout.Document
@@ -58,6 +57,7 @@ class Template_1 @Inject constructor(
         informationAbilities(document)
         informationExperience(document)
         informationReferences(document)
+        informationCertificate(document)
     }
 
     // Communication
@@ -69,11 +69,11 @@ class Template_1 @Inject constructor(
     }
 
     fun personalInformationNameSurname(document: Document) {
-        val infoParagraph = Paragraph()
+        val paragraph = Paragraph()
         lifecycleOwner.observe(viewModel.communicationMLD) {
             if (!it.isNullOrEmpty()) {
                 it?.forEach {
-                    with(infoParagraph) {
+                    with(paragraph) {
 
                         var nameUpper = it.name?.toUpperCase()
                         var surnameUpper = it.surname?.toUpperCase()
@@ -98,19 +98,21 @@ class Template_1 @Inject constructor(
                         add("\n")
                     }
                 }
-                document.add(infoParagraph)
-                document.add(line())
+                document.add(paragraph)
+                if (!paragraph.isEmpty()) {
+                    document.add(createLineParagraph())
+                }
             }
         }
     }
 
     fun personalInformationJob(document: Document) {
-        val infoParagraph = Paragraph()
+        val paragraph = Paragraph()
 
         lifecycleOwner.observe(viewModel.communicationMLD) {
             if (!it.isNullOrEmpty()) {
                 it?.forEach {
-                    with(infoParagraph) {
+                    with(paragraph) {
                         if (!it.job.isNullOrEmpty()) {
 
                             var jobUpper = it.job?.toUpperCase()
@@ -126,19 +128,21 @@ class Template_1 @Inject constructor(
                         }
                     }
                 }
-                document.add(infoParagraph)
-                document.add(line())
+                document.add(paragraph)
+                if (!paragraph.isEmpty()) {
+                    document.add(createLineParagraph())
+                }
             }
         }
     }
 
     fun personalInformationAboutMe(document: Document) {
-        val infoParagraph = Paragraph()
+        val paragraph = Paragraph()
 
         lifecycleOwner.observe(viewModel.communicationMLD) {
             if (!it.isNullOrEmpty()) {
                 it?.forEach {
-                    with(infoParagraph) {
+                    with(paragraph) {
                         if (!it.aboutMe.isNullOrEmpty()) {
 
                             add(addText(it.aboutMe, style.template_1_Calibri_11f(), 5f, 5f))
@@ -146,8 +150,11 @@ class Template_1 @Inject constructor(
                         }
                     }
                 }
-                document.add(infoParagraph)
-                document.add(line())
+                document.add(paragraph)
+
+                if (!paragraph.isEmpty()) {
+                    document.add(createLineParagraph())
+                }
             }
         }
     }
@@ -155,64 +162,74 @@ class Template_1 @Inject constructor(
     fun personalInformationCommunication(document: Document) {
 
         var table = Table(3)
+            .setWidth(UnitValue.createPercentValue(100f))
+
         lifecycleOwner.observe(viewModel.communicationMLD) {
             if (!it.isNullOrEmpty()) {
                 it?.forEach {
                     with(table) {
                         // Phone
                         if (!it.phone.isNullOrEmpty()) {
-                            var imagePhone = image.image(context, R.drawable.baseline_phone_24)
-                            addCell(
-                                addValueSameCell(
-                                    image = imagePhone,
-                                    val1 = it.phone,
-                                    styles1 = style.template_1_Calibri_11f(),
-                                    top = 5f,
-                                    bottom = 5f
-                                )
+
+                            val values = listOf(
+                                it.phone to style.template_1_Calibri_11f(),
                             )
+
+                            var imagePhone = image.image(context, R.drawable.baseline_phone_24)
+                            var phone = addValueSameCell(
+                                image = imagePhone,
+                                values = values,
+                                paddingTop = 5f,
+                                paddingBottom = 5f
+                            )
+                            addCell(phone)
                         }
 
                         // Mail
                         if (!it.email.isNullOrEmpty()) {
                             var imageMail = image.image(context, R.drawable.baseline_email_24)
-                            addCell(
-                                addValueSameCell(
-                                    image = imageMail,
-                                    val1 = it.email,
-                                    styles1 = style.template_1_Calibri_11f(),
-                                    top = 5f,
-                                    bottom = 5f
-                                )
+                            val values = listOf(
+                                it.email to style.template_1_Calibri_11f(),
                             )
+                            var email = addValueSameCell(
+                                image = imageMail,
+                                values = values,
+                                paddingTop = 5f,
+                                paddingBottom = 5f
+                            )
+                            addCell(email)
                         }
 
                         if (!it.address.isNullOrEmpty()) {
                             // Location
                             var imageLocation =
                                 image.image(context, R.drawable.baseline_location_on_24)
-                            addCell(
-                                addValueSameCell(
-                                    image = imageLocation,
-                                    val1 = it.address,
-                                    styles1 = style.template_1_Calibri_11f(),
-                                    top = 5f,
-                                    bottom = 5f
-                                )
+
+                            val values = listOf(
+                                it.address to style.template_1_Calibri_11f()
                             )
+
+                            var address = addValueSameCell(
+                                image = imageLocation,
+                                values = values,
+                                paddingTop = 5f,
+                                paddingBottom = 5f
+                            )
+                            addCell(address)
                         }
-                        setWidth(UnitValue.createPercentValue(100f))
                     }
                 }
                 document.add(table)
-                document.add(line())
+                if (!table.isEmpty()) {
+                    document.add(createLineParagraph())
+                }
             }
         }
     }
 
     // Social Media
     fun informationSocialMedia(document: Document) {
-        var table = Table(3)
+        var table = Table(3).setWidth(UnitValue.createPercentValue(100f))
         val imageGithub = image.image(context, R.drawable.github_)
         val imageLinkedin = image.image(context, R.drawable.linkedin_)
         val imageWebSite = image.image(context, R.drawable.website_)
@@ -222,44 +239,54 @@ class Template_1 @Inject constructor(
                 socialMedia.forEach {
                     with(table) {
                         if (!it.github.isNullOrEmpty()) {
+
+                            var values = listOf(
+                                it.github to style.template_1_Calibri_11f()
+                            )
                             var cell = addValueSameCell(
                                 imageGithub,
-                                val1 = it.github,
-                                styles1 = style.template_1_Calibri_11f(),
-                                top = 5f,
-                                bottom = 5f
+                                values = values,
+                                paddingTop = 5f,
+                                paddingBottom = 5f
                             )
                             addCell(cell)
                         }
 
                         if (!it.linkedIn.isNullOrEmpty()) {
+
+                            var values = listOf(
+                                it.linkedIn to style.template_1_Calibri_11f()
+                            )
+
                             var cell = addValueSameCell(
                                 imageLinkedin,
-                                val1 = it.linkedIn,
-                                styles1 = style.template_1_Calibri_11f(),
-                                top = 5f,
-                                bottom = 5f
+                                values = values,
+                                paddingTop = 5f,
+                                paddingBottom = 5f
                             )
                             addCell(cell)
                         }
 
                         if (!it.webSite.isNullOrEmpty()) {
+
+                            var values = listOf(
+                                it.webSite to style.template_1_Calibri_11f()
+                            )
+
                             var cell = addValueSameCell(
                                 imageWebSite,
-                                val1 = it.webSite,
-                                styles1 = style.template_1_Calibri_11f(),
-                                top = 5f,
-                                bottom = 5f
+                                values = values,
+                                paddingTop = 5f,
+                                paddingBottom = 5f
                             )
                             addCell(cell)
                         }
                     }
                 }
-
-                table.setWidth(UnitValue.createPercentValue(100f))
-
                 document.add(table)
-                document.add(line())
+                if (!table.isEmpty()) {
+                    document.add(createLineParagraph())
+                }
             }
         }
     }
@@ -273,6 +300,7 @@ class Template_1 @Inject constructor(
 
     fun informationLanguage(document: Document) {
         var table = Table(4)
+            .setWidth(UnitValue.createPercentValue(100f))
 
         lifecycleOwner.observe(viewModel.languageMLD) { language ->
             if (!language.isNullOrEmpty()) {
@@ -280,27 +308,26 @@ class Template_1 @Inject constructor(
                     with(table) {
                         if (!it.languageName.isNullOrEmpty()) {
 
-                            var cell = addValueSameCell(
-                                val1 = it.languageName!!,
-                                styles1 = style.template_1_Calibri_10f(),
-                                val2 = requireActivity.resources.getString(R.string.dots),
-                                val3 = it.level,
-                                styles3 = style.template_1_Calibri_10f()
+                            var values = listOf(
+                                it.languageName to style.template_1_Calibri_10f(),
+                                requireActivity.resources.getString(R.string.dots) to style.template_1_Calibri_10f(),
+                                it.level to style.template_1_Calibri_10f()
                             )
 
+                            var cell = addValueSameCell(values = values)
                             addCell(cell)
                         }
                     }
                 }
-                table.setWidth(UnitValue.createPercentValue(100f))
 
-                document.add(titleLanguage())
-                document.add(table)
-                document.add(line())
+                if (!table.isEmpty()) {
+                    document.add(titleLanguage())
+                    document.add(table)
+                    document.add(createLineParagraph())
+                }
             }
         }
     }
-
 
     // Education
     fun titleEducation(): Paragraph {
@@ -310,7 +337,7 @@ class Template_1 @Inject constructor(
     }
 
     fun informationEducation(document: Document) {
-        var table = Table(3)
+        var table = Table(3).setWidth(UnitValue.createPercentValue(100f))
 
         lifecycleOwner.observe(viewModel.educationMLD) { education ->
             if (!education.isNullOrEmpty()) {
@@ -318,42 +345,59 @@ class Template_1 @Inject constructor(
                     with(table) {
                         if (!it.schoolName.isNullOrEmpty()) {
 
-                            addCell(
-                                addValueSameCell(
-                                    val1 = it.startDate,
-                                    styles1 = style.template_1_Calibri_11f(),
-                                    val2 = requireActivity.resources.getString(R.string.line),
-                                    val3 = it.finishDate,
-                                    styles3 = style.template_1_Calibri_11f()
-                                )
+                            var valuesDate = listOf(
+                                it.startDate to style.template_1_Calibri_11f(),
+                                requireActivity.resources.getString(R.string.line) to style.template_1_Calibri_11f(),
+                                it.finishDate to style.template_1_Calibri_11f()
+                            )
+                            var valuesSchool = listOf(
+                                it.schoolName to style.template_1_CalibriBold_11f()
                             )
 
-                            addCell(addValueCell(it.schoolName, style.template_1_CalibriBold_11f()))
+                            var date = addValueSameCell(values = valuesDate)
+                            addCell(date)
 
-                            if (!it.gano.isNullOrEmpty()) {
-                                addCell(addValueCell(it.gano, style.template_1_Calibri_10f()))
-                            } else {
-                                addCell(emptyCell())
-                            }
-
+                            var schoolName = addValueSameCell(values = valuesSchool)
+                            addCell(schoolName)
+                        } else {
                             addCell(emptyCell())
-
-                            addCell(
-                                addValueCell(
-                                    it.departmentName,
-                                    style.template_1_CalibriItalic_10f()
-                                )?.setPaddingTop(-10f)
-                            )
                             addCell(emptyCell())
-
                         }
+
+                        if (!it.gano.isNullOrEmpty()) {
+                            var values = listOf(
+                                it.gano to style.template_1_Calibri_10f()
+                            )
+                            var gano = addValueSameCell(values = values)
+                            addCell(gano)
+                        } else {
+                            addCell(emptyCell())
+                        }
+
+                        addCell(emptyCell())
+
+                        if (!it.departmentName.isNullOrEmpty()) {
+                            var values = listOf(
+                                it.departmentName to style.template_1_CalibriItalic_10f()
+                            )
+                            var departmentName = addValueSameCell(
+                                values = values,
+                                paddingTop = -10f
+                            )
+                            addCell(departmentName)
+                        } else {
+                            addCell(emptyCell())
+                        }
+
+                        addCell(emptyCell())
                     }
                 }
-                table.setWidth(UnitValue.createPercentValue(100f))
+            }
 
+            if (!table.isEmpty()) {
                 document.add(titleEducation())
                 document.add(table)
-                document.add(line())
+                document.add(createLineParagraph())
             }
         }
     }
@@ -381,9 +425,11 @@ class Template_1 @Inject constructor(
                     }
                 }
 
-                document.add(titleAbilities())
-                document.add(paragraph)
-                document.add(line())
+                if (!paragraph.isEmpty()) {
+                    document.add(titleAbilities())
+                    document.add(paragraph)
+                    document.add(createLineParagraph())
+                }
             }
         }
     }
@@ -396,77 +442,81 @@ class Template_1 @Inject constructor(
     }
 
     fun informationExperience(document: Document) {
-        var table = Table(2)
+        var table = Table(2).setWidth(UnitValue.createPercentValue(100f))
 
         lifecycleOwner.observe(viewModel.experienceMLD) { experience ->
             if (!experience.isNullOrEmpty()) {
                 experience?.forEach {
                     with(table) {
+
                         if (!it.positionName.isNullOrEmpty()) {
+                            var date = Cell()
 
-                            var cellDate = Cell()
-                            if (!it.finishDate.isNullOrEmpty()) {
-                                cellDate = addValueSameCell(
-                                    val1 = it.startDate,
-                                    styles1 = style.template_1_Calibri_11f(),
-                                    val2 = requireActivity.resources.getString(R.string.line),
-                                    val3 = it.finishDate,
-                                    styles3 = style.template_1_Calibri_11f()
-                                )
-                            } else {
-                                cellDate = addValueSameCell(
-                                    val1 = it.startDate,
-                                    styles1 = style.template_1_Calibri_11f(),
-                                    val2 = requireActivity.resources.getString(R.string.line),
-                                    val3 = requireActivity.resources.getString(R.string.continueEx),
-                                    styles3 = style.template_1_Calibri_11f(),
-                                )
-                            }
-
-                            addCell(cellDate)
-
-                            addCell(
-                                addValueCell(
-                                    it.positionName,
-                                    style.template_1_CalibriBold_11f()
-                                )
+                            var values = listOf(
+                                it.startDate to style.template_1_Calibri_11f(),
+                                requireActivity.resources.getString(R.string.line) to style.template_1_Calibri_11f(),
+                                if (!it.finishDate.isNullOrEmpty()) {
+                                    it.finishDate to style.template_1_Calibri_11f()
+                                } else {
+                                    requireActivity.resources.getString(R.string.present) to style.template_1_Calibri_11f()
+                                }
                             )
-                            addCell(emptyCell())
 
-                            addCell(
-                                addValueCell(
-                                    it.companyName,
-                                    style.template_1_Calibri_11f()
-                                )?.setPaddingTop(-10f)
+                            date = addValueSameCell(values = values).setWidth(UnitValue.createPercentValue(30f))
+                            addCell(date)
+
+                            val valuesName = listOf(
+                                it.positionName to style.template_1_CalibriBold_11f()
                             )
+
+                            var positionName = addValueSameCell(values = valuesName)
+                            addCell(positionName)
+                        } else {
                             addCell(emptyCell())
+                            addCell(emptyCell())
+                        }
 
-                            var point = image.image(context, R.drawable.baseline_point_24)
-                            var cellInfo = Cell()
+                        addCell(emptyCell()) // Date'in altı boş olucak
 
-                            if (!it.infoAboutJob.isNullOrEmpty()) {
-                                cellInfo = addValueSameCell(
-                                    point,
-                                    val1 = it.infoAboutJob,
-                                    styles1 = style.template_1_Calibri_10f(),
-                                    top = -7f
-                                )
-                            } else {
-                                addCell(emptyCell())
-                            }
-                            addCell(cellInfo)
+                        if (!it.companyName.isNullOrEmpty()) {
+                            val values = listOf(
+                                it.companyName to style.template_1_Calibri_Bold_9f()
+                            )
+
+                            var companyName = addValueSameCell(
+                                values = values,
+                                paddingTop = -10f
+                            )
+                            addCell(companyName)
+                        } else {
+                            addCell(emptyCell())
+                        }
+
+                        addCell(emptyCell())
+
+                        if (!it.infoAboutJob.isNullOrEmpty()) {
+                            val values = listOf(
+                                it.infoAboutJob to style.template_1_Calibri_9f()
+                            )
+                            var infoJob = addValueSameCell(
+                                values = values,
+                                paddingTop = -7f
+                            )
+                            addCell(infoJob)
+                        } else {
+                            addCell(emptyCell())
                         }
                     }
                 }
-                table.setWidth(UnitValue.createPercentValue(100f))
+            }
 
+            if (!table.isEmpty()) {
                 document.add(titleExperience())
                 document.add(table)
-                document.add(line())
+                document.add(createLineParagraph())
             }
         }
     }
-
 
     // References
     fun titleReferences(): Paragraph {
@@ -483,36 +533,46 @@ class Template_1 @Inject constructor(
                 if (!abilities.isNullOrEmpty()) {
                     abilities?.forEach {
                         if (!it.name.isNullOrEmpty()) {
+
+                            val values = listOf(
+                                it.name to style.template_1_Calibri_11f(),
+                                requireActivity.resources.getString(R.string.space) to style.template_1_Calibri_11f(),
+                                it.surname to style.template_1_Calibri_11f(),
+                            )
+
                             var point = image.image(context, R.drawable.baseline_point_24)
                             var cell = addValueSameCell(
                                 image = point,
-                                val1 = it.name!!,
-                                styles1 = style.template_1_Calibri_11f(),
-                                val2 = requireActivity.resources.getString(R.string.space),
-                                val3 = it.surname,
-                                styles3 = style.template_1_Calibri_11f()
+                                values = values
                             )
                             addCell(cell)
 
+                            if (!it.positionName.isNullOrEmpty()) {
+                                val values = listOf(
+                                    it.positionName to style.template_1_Calibri_11f(),
+                               )
+                                var positionName = addValueSameCell(values = values)
+                                addCell(positionName)
+                            } else {
+                                addCell(emptyCell())
+                            }
+
                             if (!it.email.isNullOrEmpty()) {
-                                addCell(
-                                    addValueCell(
-                                        it.positionName,
-                                        style.template_1_Calibri_11f()
-                                    )
+                                val values = listOf(
+                                    it.email to style.template_1_Calibri_11f(),
                                 )
+                                var email = addValueSameCell(values = values)
+                                addCell(email)
                             } else {
                                 addCell(emptyCell())
                             }
 
-                            if (!it.email.isNullOrEmpty()) {
-                                addCell(addValueCell(it.email, style.template_1_Calibri_11f()))
-                            } else {
-                                addCell(emptyCell())
-                            }
-
-                            if (!it.email.isNullOrEmpty()) {
-                                addCell(addValueCell(it.phone, style.template_1_Calibri_11f()))
+                            if (!it.phone.isNullOrEmpty()) {
+                                val values = listOf(
+                                    it.phone to style.template_1_Calibri_11f(),
+                                )
+                                var phone = addValueSameCell(values = values)
+                                addCell(phone)
                             } else {
                                 addCell(emptyCell())
                             }
@@ -521,10 +581,96 @@ class Template_1 @Inject constructor(
 
                     setWidth(UnitValue.createPercentValue(100f))
 
-                    document.add(titleReferences())
-                    document.add(table)
-                    document.add(line())
+                    if (!table.isEmpty()) {
+                        document.add(titleReferences())
+                        document.add(table)
+                        document.add(createLineParagraph())
+                    }
                 }
+            }
+        }
+    }
+
+    // Certificates
+    fun titleCertificates(): Paragraph {
+        val infoParagraph = Paragraph()
+        var title = requireActivity.resources.getString(R.string.Certificates)
+        return title(infoParagraph, title, style.template_1_Title())
+    }
+
+    fun informationCertificate(document: Document) {
+        var table = Table(2).setWidth(UnitValue.createPercentValue(100f))
+
+        lifecycleOwner.observe(viewModel.certificateMLD) { experience ->
+            if (!experience.isNullOrEmpty()) {
+                experience?.forEach {
+                    with(table) {
+
+                        if (!it.certificateProjectOrAwardName.isNullOrEmpty()) {
+                            var date = Cell()
+
+                            var values = listOf(
+                                it.startDate to style.template_1_Calibri_11f(),
+                                requireActivity.resources.getString(R.string.line) to style.template_1_Calibri_11f(),
+                                if (!it.finishDate.isNullOrEmpty()) {
+                                    it.finishDate to style.template_1_Calibri_11f()
+                                } else {
+                                    requireActivity.resources.getString(R.string.present) to style.template_1_Calibri_11f()
+                                }
+                            )
+
+                            date = addValueSameCell(values = values).setWidth(UnitValue.createPercentValue(30f))
+                            addCell(date)
+
+                            val valuesName = listOf(
+                                it.certificateProjectOrAwardName  to style.template_1_CalibriBold_11f()
+                            )
+
+                            var certificateName = addValueSameCell(values = valuesName)
+                            addCell(certificateName)
+                        } else {
+                            addCell(emptyCell())
+                            addCell(emptyCell())
+                        }
+
+                        addCell(emptyCell()) // Date'in altı boş olucak
+
+                        if (!it.educationPlace.isNullOrEmpty()) {
+                            val values = listOf(
+                                it.educationPlace to style.template_1_Calibri_Bold_9f()
+                            )
+
+                            var companyName = addValueSameCell(
+                                values = values,
+                                paddingTop = -10f
+                            )
+                            addCell(companyName)
+                        } else {
+                            addCell(emptyCell())
+                        }
+
+                        addCell(emptyCell())
+
+                        if (!it.aboutCertificate.isNullOrEmpty()) {
+                            val values = listOf(
+                                it.aboutCertificate to style.template_1_Calibri_9f()
+                            )
+                            var infoJob = addValueSameCell(
+                                values = values,
+                                paddingTop = -7f
+                            )
+                            addCell(infoJob)
+                        } else {
+                            addCell(emptyCell())
+                        }
+                    }
+                }
+            }
+
+            if (!table.isEmpty()) {
+                document.add(titleCertificates())
+                document.add(table)
+                document.add(createLineParagraph())
             }
         }
     }

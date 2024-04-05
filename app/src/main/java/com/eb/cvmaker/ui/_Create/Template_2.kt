@@ -9,8 +9,6 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
-import android.os.Environment
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
@@ -20,29 +18,22 @@ import com.eb.cvmaker._paragraphStyle.Images
 import com.eb.cvmaker._paragraphStyle.Styles
 import com.eb.cvmaker.addValueCell
 import com.eb.cvmaker.addValueSameCell
-import com.eb.cvmaker.cellStyleSameCell
-import com.eb.cvmaker.createLine
-import com.eb.cvmaker.emptyCell
+import com.eb.cvmaker.createLineCell
 import com.eb.cvmaker.observe
-import com.eb.cvmaker.ui.Communication.CommunicationFragment
 import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.kernel.geom.PageSize
 import com.itextpdf.layout.Document
 import com.itextpdf.layout.borders.Border
 import com.itextpdf.layout.element.Cell
 import com.itextpdf.layout.element.Image
-import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
+import com.itextpdf.layout.element.Text
 import com.itextpdf.layout.property.TextAlignment
 import com.itextpdf.layout.property.UnitValue
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
 import javax.inject.Inject
-
 
 class Template_2 @Inject constructor(
     private val viewModel: ChooseTemplateVM,
@@ -50,8 +41,7 @@ class Template_2 @Inject constructor(
     var context: Context,
 ) {
 
-    // val widthLeft = PageSize.A4.width * 0.32f
-    val widthLeft = PageSize.A4.width * 0.32f
+    val widthLeft = PageSize.A4.width * 0.30f
     val widthSpace = PageSize.A4.width * 0.03f // 2 tablo arası mesafe
     val widthRight = PageSize.A4.width * 0.52f
 
@@ -67,11 +57,15 @@ class Template_2 @Inject constructor(
         personalInformation(document)
         profile(document)
 
-        val tableLeft = Table(1).setWidth(widthLeft).setTextAlignment(TextAlignment.LEFT)
+        val tableLeft = Table(1)
+            .setTextAlignment(TextAlignment.LEFT)
             .setHeight(UnitValue.createPercentValue(45f))
 
-        val tableRight = Table(1).setWidth(widthRight).setTextAlignment(TextAlignment.LEFT)
+        val tableRight = Table(1)
+            .setPaddingLeft(widthSpace)
+            .setTextAlignment(TextAlignment.LEFT)
             .setHeight(UnitValue.createPercentValue(60f))
+            .setMarginRight(18f)
         //   .setFixedPosition(widthSpaceForRight, bottom, widthRight)
 
         informationCommunicationLeft(tableLeft)
@@ -83,62 +77,40 @@ class Template_2 @Inject constructor(
             .setWidth(PageSize.A4.width)
             .setMarginLeft(-18f)
 
-        val firstColumn = Cell().add(tableLeft).setWidth(widthLeft).setBorder(Border.NO_BORDER)
-        tableContainer.addCell(firstColumn)
+        val firstColumn = Cell().add(tableLeft)
+            .setWidth(widthLeft)
+            .setBorder(Border.NO_BORDER)
 
-        val secondColumn =
-            Cell().add(tableRight).setWidth(widthRight).setPaddingLeft(widthSpace)
-                .setPaddingTop(10f)
-                .setBorder(Border.NO_BORDER)
+        val secondColumn = Cell()
+            .add(tableRight)
+            .setWidth(widthRight)
+            .setPaddingTop(10f)
+            .setBorder(Border.NO_BORDER)
+
+
+        tableContainer.addCell(firstColumn)
         tableContainer.addCell(secondColumn)
 
         document.add(tableContainer)
     }
 
-
     fun informationCommunicationLeft(tableLeft: Table) {
-        titleContact(tableLeft)
         personalInformationContact(tableLeft)
-
-        titleSocialMedia(tableLeft)
         informationSocialMedia(tableLeft)
-
-        titleLanguages(tableLeft)
         informationLanguages(tableLeft)
-
-        titleAbilities(tableLeft)
         informationAbilities(tableLeft)
-
-        titleReferences(tableLeft)
         informationReferences(tableLeft)
     }
 
     fun informationCommunicationRight(tableRight: Table) {
 
-        titleAboutMe(tableRight)
-        titleEmpty(tableRight)
         informationAboutMe(tableRight)
-        titleEmpty(tableRight)
-
-        titleExperience(tableRight)
-        titleEmpty(tableRight)
         informationExperience(tableRight)
-
-        titleEducation(tableRight)
-        titleEmpty(tableRight)
         informationEducation(tableRight)
-
+        informationCertificates(tableRight)
     }
 
     fun background(document: Document) {
-        /*    val paragraph = Paragraph()
-            val imageData = image.image(context, R.drawable.template2_background)
-            paragraph.add(imageData)
-            //  document.setMargins(pageHeight, pageWidth, pageHeight, pageWidth)
-            document.setMargins(0f, 0f, 0f, 0f)
-            document.add(paragraph)
-    */
-
         val A4_WIDTH_MM = 210f
         val A4_HEIGHT_MM = 297f
         val DPI = 72 // veya 96, kullanılan DPI'ye bağlı olarak değiştirin
@@ -170,30 +142,23 @@ class Template_2 @Inject constructor(
         var filePath = sharedPreferences?.getString("imagePath", "").toString()
 
         if (filePath != null) {
-            Log.d("xxxxxEeeliff", filePath)
             try {
-            val file = File(filePath)
+                val file = File(filePath)
                 val inputStream = FileInputStream(file)
                 val bitmap = BitmapFactory.decodeStream(inputStream)
 
-                val circularBitmap = cropToCircle(bitmap)
+                var circleBitmap = cropToCircle(bitmap)
 
                 val outputStream = ByteArrayOutputStream()
-                circularBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                circleBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
                 val imageData: ByteArray = outputStream.toByteArray()
 
                 val image = Image(ImageDataFactory.create(imageData))
 
-                 image.scaleToFit(150f, 150f)
-                 image.setFixedPosition(40f, 700f)
-
-
+                image.scaleToFit(120f, 120f)
+                image.setFixedPosition(30f, 710f)
 
                 document.add(image)
-
-
-
-
 
             } catch (e: Exception) {
                 Log.e("Template_2", "Resim yüklemede hata:", e)
@@ -219,143 +184,42 @@ class Template_2 @Inject constructor(
         return output
     }
 
-
-    fun profilee(document: Document) {
-        lifecycleOwner.observe(viewModel.communicationMLD) {
-            if (!it.isNullOrEmpty()) {
-                it?.forEach { communication ->
-                    communication?.let {
-
-                        Log.d("xxxxxElifff imagee", it.image.toString())
-
-
-                        /*
-                        val xObject =
-                            PdfImageXObject(ImageDataFactory.createPng(UrlUtil.toURL(it.image)))
-                        val image =
-                            Image(xObject, 100f).setHorizontalAlignment(HorizontalAlignment.RIGHT)
-                        document.add(image)
-
-                        val contentUri: Uri = Uri.parse(it.image)
-                        val filePath = getFilePathFromContentUri(context, contentUri)
-                        if (filePath != null) {
-                      //      addImageToPdf(document, filePath)
-                        }
-*/
-
-
-                        //TODO  Şu case ile çalışıyor :
-                        // Communicationda delete yap.
-                        // Communicationa resim, isim, soyisim ..... gir
-                        // PDF oluştur
-                        // Resim gözüküyor.
-                        // FAKAT
-                        // Uygulamadan çıkıp girdiğinde
-                        // Communicationlar varken ( değişiklik yapmadan) PDF oluşturulmak istendiğinde hata veriyor.
-                        // Hata :  java.lang.SecurityException: Permission Denial: opening provider com.miui.gallery.provider.GalleryOpenProvider from ProcessRecord{90f871f 23301:com.eb.cvmaker/u0a415} (pid=23301, uid=10415) that is not exported from UID 10090
-
-
-                        var imageUri = Uri.parse(it.image)
-                        val outputStream = ByteArrayOutputStream()
-
-                        if (imageUri != null) {
-                            Log.d("xxxxxElifff ", it.image.toString())
-
-                            val inputStream: InputStream? =
-                                context.contentResolver.openInputStream(imageUri!!)
-                            if (inputStream != null) {
-                                Log.d("xxxxxElifff imagee", it.image.toString())
-
-                                // InputStream null değilse, resmi yükle ve PDF'e ekle
-                                val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                                val imageData: ByteArray = outputStream.toByteArray()
-                                val image = Image(ImageDataFactory.create(imageData))
-                                image.scaleToFit(100f, 100f)
-                                image.setFixedPosition(36f, 750f)
-                                document.add(image)
-                            } else {
-                                Log.e("Template_2", "Input stream is null")
-                            }
-                        } else {
-                            Log.e("Template_2", "Image URI is null")
-                        }
-
-
-                    }
-                }
-            }
-        }
-    }
-
-    fun getFilePathFromContentUri(context: Context, contentUri: Uri): String? {
-        var filePath: String? = null
-        val projection = arrayOf(android.provider.MediaStore.Images.ImageColumns.DATA)
-        val cursor = context.contentResolver.query(contentUri, projection, null, null, null)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val columnIndex =
-                    it.getColumnIndexOrThrow(android.provider.MediaStore.Images.ImageColumns.DATA)
-                filePath = it.getString(columnIndex)
-            }
-        }
-        return filePath
-    }
-
-    // Dosyayı PDF'e ekleme işlevi
-    fun addImageToPdf(pdfDocument: Document, imagePath: String) {
-        try {
-            val bitmap = BitmapFactory.decodeFile(imagePath)
-            val image = Image(ImageDataFactory.create(imagePath))
-            val A4_HEIGHT_MM = 297f
-            val DPI = 72 // veya 96, kullanılan DPI'ye bağlı olarak değiştirin
-            val heightPx = (A4_HEIGHT_MM / 25.4f * DPI).toInt()
-            image.setFixedPosition(0f, PageSize.A4.height - heightPx)
-            pdfDocument.add(image)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        return stream.toByteArray()
-    }
-
-
     fun personalInformation(document: Document) {
 
         var table = Table(1)
-        table.setMarginTop(0f)
+            .setWidth(UnitValue.createPercentValue(100f))
+            .setMarginTop(-20f)
+            .setMarginLeft(110f)
 
         lifecycleOwner.observe(viewModel.communicationMLD) {
             if (!it.isNullOrEmpty()) {
                 it?.forEach {
 
-                    var cellNameAndSurname = cellStyleSameCell(
-                        val1 = it.name,
-                        styles1 = style.template_2_Name_Surname(),
-                        val2 = requireActivity.resources.getString(R.string.space),
-                        styles2 = style.template_2_Name_Surname(),
-                        val3 = it.surname?.toUpperCase(),
-                        styles3 = style.template_2_Name_Surname(),
-                        TextAlignment.CENTER
+                    val valuesName = listOf(
+                        it.name to style.template_2_Name_Surname(),
+                        requireActivity.resources.getString(R.string.space) to style.template_2_Name_Surname(),
+                        it.surname?.toUpperCase() to style.template_2_Name_Surname(),
+
+                        )
+                    val valuesJob = listOf(
+                        it.job?.toUpperCase() to style.template_2_Job()
                     )
 
+
+                    var cellNameAndSurname = addValueSameCell(
+                        values = valuesName,
+                        marginBottomParagraph = -35f,
+                        alignment = TextAlignment.CENTER
+                    )
                     table.addCell(cellNameAndSurname)
 
-                    var cellJob = cellStyleSameCell(
-                        val1 = it.job?.toUpperCase(),
-                        style.template_2_Job(),
+                    var cellJob = addValueSameCell(
+                        values = valuesJob,
+                        marginBottomParagraph = -35f,
                         alignment = TextAlignment.CENTER
                     )
                     table.addCell(cellJob)
                 }
-
-                table.setWidth(UnitValue.createPercentValue(100f))
-                table.setTextAlignment(TextAlignment.CENTER)
-
                 document.add(table)
             }
         }
@@ -365,50 +229,59 @@ class Template_2 @Inject constructor(
     fun titleContact(table: Table) {
         var title = requireActivity.resources.getString(R.string.contact)
         table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLine(widthLeft))
+        table.addCell(createLineCell(widthLeft))
     }
 
     fun personalInformationContact(table: Table) {
         lifecycleOwner.observe(viewModel.communicationMLD) {
             if (!it.isNullOrEmpty()) {
+
+                titleContact(table)
                 it?.forEach {
+                    val valuesPhone = listOf(
+                        it.phone to style.template_2_Arial_11f(),
+                    )
+
+                    val valuesEmail = listOf(
+                        it.email to style.template_2_Arial_11f(),
+                    )
+
+                    val valuesAddress = listOf(
+                        it.address to style.template_2_Arial_11f(),
+                    )
+
                     with(table) {
+
                         // Phone
                         if (!it.phone.isNullOrEmpty()) {
                             var imagePhone = image.image(context, R.drawable.baseline_phone_24)
-                            addCell(
-                                addValueSameCell(
-                                    image = imagePhone,
-                                    val1 = it.phone,
-                                    styles1 = style.template_2_Arial_11f(),
-                                    top = 10f
-                                )
+                            var phone = addValueSameCell(
+                                image = imagePhone,
+                                values = valuesPhone,
+                                paddingTop = 10f
                             )
+                            addCell(phone)
                         }
 
                         // Mail
                         if (!it.email.isNullOrEmpty()) {
                             var imageMail = image.image(context, R.drawable.baseline_email_24)
-                            addCell(
-                                addValueSameCell(
-                                    image = imageMail,
-                                    val1 = it.email,
-                                    styles1 = style.template_2_Arial_11f(),
-                                )
+                            var mail = addValueSameCell(
+                                image = imageMail,
+                                values = valuesEmail
                             )
+                            addCell(mail)
                         }
 
                         // Location
                         if (!it.address.isNullOrEmpty()) {
                             var imageLocation =
                                 image.image(context, R.drawable.baseline_location_on_24)
-                            addCell(
-                                addValueSameCell(
-                                    image = imageLocation,
-                                    val1 = it.address,
-                                    styles1 = style.template_2_Arial_11f(),
-                                )
+                            var address = addValueSameCell(
+                                image = imageLocation,
+                                values = valuesAddress
                             )
+                            addCell(address)
                         }
                     }
                 }
@@ -420,7 +293,7 @@ class Template_2 @Inject constructor(
     fun titleSocialMedia(table: Table) {
         var title = requireActivity.resources.getString(R.string.SocialMedia)
         table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLine(widthLeft)).setPaddingBottom(-15f)
+        table.addCell(createLineCell(widthLeft))//.setPaddingBottom(-15f)
     }
 
     fun informationSocialMedia(table: Table) {
@@ -430,13 +303,30 @@ class Template_2 @Inject constructor(
 
         lifecycleOwner.observe(viewModel.socialMediaMLD) { socialMedia ->
             if (!socialMedia.isNullOrEmpty()) {
+
+                titleSocialMedia(table)
+
                 socialMedia.forEach {
+
+                    val valuesGithub = listOf(
+                        it.github to style.template_2_Arial_105f(),
+                    )
+
+                    val valuesLinkedIn = listOf(
+                        it.linkedIn to style.template_2_Arial_105f(),
+                    )
+
+                    val valuesWebSite = listOf(
+                        it.webSite to style.template_2_Arial_105f(),
+                    )
+
+
                     with(table) {
                         if (!it.github.isNullOrEmpty()) {
                             var cell = addValueSameCell(
                                 imageGithub,
-                                val1 = it.github,
-                                styles1 = style.template_2_Arial_105f(),
+                                values = valuesGithub,
+                                paddingTop = 10f
                             )
                             addCell(cell)
                         }
@@ -444,8 +334,7 @@ class Template_2 @Inject constructor(
                         if (!it.linkedIn.isNullOrEmpty()) {
                             var cell = addValueSameCell(
                                 imageLinkedin,
-                                val1 = it.linkedIn,
-                                styles1 = style.template_2_Arial_105f(),
+                                values = valuesLinkedIn
                             )
                             addCell(cell)
                         }
@@ -453,8 +342,7 @@ class Template_2 @Inject constructor(
                         if (!it.webSite.isNullOrEmpty()) {
                             var cell = addValueSameCell(
                                 imageWebSite,
-                                val1 = it.webSite,
-                                styles1 = style.template_2_Arial_105f()
+                                values = valuesWebSite
                             )
                             addCell(cell)
                         }
@@ -468,25 +356,29 @@ class Template_2 @Inject constructor(
     fun titleLanguages(table: Table) {
         var title = requireActivity.resources.getString(R.string.Languages)
         table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLine(widthLeft))
+        table.addCell(createLineCell(widthLeft))
     }
 
     fun informationLanguages(table: Table) {
-        val width = PageSize.A4.width * 0.25f
 
         lifecycleOwner.observe(viewModel.languageMLD) { socialMedia ->
             if (!socialMedia.isNullOrEmpty()) {
+
+                titleLanguages(table)
+
                 socialMedia.forEach {
+                    val valuesLanguageAndLevel = listOf(
+                        it.languageName to style.template_2_Arial_11f(),
+                        requireActivity.resources.getString(R.string.dots) to style.template_2_Arial_11f(),
+                        requireActivity.resources.getString(R.string.space) to style.template_2_Arial_11f(),
+                        it.level to style.template_2_Arial_11f(),
+                    )
+
                     with(table) {
                         if (!it.languageName.isNullOrEmpty()) {
 
                             var cell = addValueSameCell(
-                                val1 = it.languageName!!,
-                                styles1 = style.template_2_Arial_11f(),
-                                val2 = requireActivity.resources.getString(R.string.dots),
-                                val3 = requireActivity.resources.getString(R.string.space),
-                                val4 = it.level,
-                                styles4 = style.template_2_Arial_11f(),
+                                values = valuesLanguageAndLevel
                             )
                             addCell(cell)
                         }
@@ -500,24 +392,28 @@ class Template_2 @Inject constructor(
     fun titleAbilities(table: Table) {
         var title = requireActivity.resources.getString(R.string.skills)
         table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLine(widthLeft))
+        table.addCell(createLineCell(widthLeft))
     }
 
     fun informationAbilities(table: Table) {
         lifecycleOwner.observe(viewModel.abilitiesMLD) { skills ->
             if (!skills.isNullOrEmpty()) {
+
+                titleAbilities(table)
+
                 skills.forEach {
+                    val valuesAbilities = listOf(
+                        it.abilitiesName to style.template_2_Arial_11f(),
+                    )
+
                     with(table) {
                         if (!it.abilitiesName.isNullOrEmpty()) {
 
                             var point = image.image(context, R.drawable.baseline_point_24)
-
-                            var cell =
-                                addValueSameCell(
-                                    point,
-                                    it.abilitiesName!!,
-                                    style.template_2_Arial_11f(),
-                                )
+                            var cell = addValueSameCell(
+                                image = point,
+                                values = valuesAbilities
+                            )
                             addCell(cell)
                         }
                     }
@@ -530,33 +426,76 @@ class Template_2 @Inject constructor(
     fun titleReferences(table: Table) {
         var title = requireActivity.resources.getString(R.string.References)
         table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLine(widthLeft))
+        table.addCell(createLineCell(widthLeft))
     }
 
     fun informationReferences(table: Table) {
-        lifecycleOwner.observe(viewModel.referencesMLD) { skills ->
-            if (!skills.isNullOrEmpty()) {
-                skills.forEach {
+        lifecycleOwner.observe(viewModel.referencesMLD) { reference ->
+            if (!reference.isNullOrEmpty()) {
+
+                titleReferences(table)
+
+                reference.forEach {
+
+
                     with(table) {
                         if (!it.name.isNullOrEmpty()) {
 
                             var point = image.image(context, R.drawable.baseline_point_24)
                             var user = it.name + " " + it.surname
 
+                            val valuesReferences = listOf(
+                                user to style.template_2_Arial_11f(),
+                            )
+
                             var cellUser = addValueSameCell(
-                                point,
-                                user,
-                                style.template_2_Arial_11f(),
-                                top = -6f,
-                                bottom = -6f
+                                image = point,
+                                values = valuesReferences
                             )
                             addCell(cellUser)
+                        }
 
-                            var cellPosition = addValueCell(
-                                it.positionName,
-                                style.template_2_Arial_11f()?.setPaddingTop(-15f)
+                        if (!it.positionName.isNullOrEmpty()) {
+
+                            val valuesReferencesPosition = listOf(
+                                it.positionName to style.template_2_Arial_Gray_10f(),
+                            )
+
+                            var cellPosition = addValueSameCell(
+                                values = valuesReferencesPosition,
+                                paddingTop = -5f,
+                                paddingLeft = 5f
                             )
                             addCell(cellPosition)
+                        }
+
+                        if (!it.email.isNullOrEmpty()) {
+
+                            val valuesReferencesEmail = listOf(
+                                it.email to style.template_2_Arial_Gray_10f(),
+                            )
+                            var cellEmail = addValueSameCell(
+                                values = valuesReferencesEmail,
+                                paddingTop = -5f,
+                                paddingLeft = 5f
+
+                            )
+                            addCell(cellEmail)
+                        }
+
+                        if (!it.phone.isNullOrEmpty()) {
+
+                            val valuesReferencesPhone = listOf(
+                                it.phone to style.template_2_Arial_Gray_10f(),
+                            )
+                            var cellPhone = addValueSameCell(
+                                values = valuesReferencesPhone,
+                                paddingTop = -5f,
+                                paddingLeft = 5f
+                            )
+                            addCell(cellPhone)
+
+
                         }
                     }
                 }
@@ -571,30 +510,35 @@ class Template_2 @Inject constructor(
             addValueCell(
                 title,
                 style.template_2_Heebo_Medium_16f(),
-                top = 10f,
+                top = 8f,
                 bottom = -10f
             )
         )
-        table.addCell(createLine(widthRight))
+        table.addCell(createLineCell(widthRight))
     }
 
     fun informationAboutMe(table: Table) {
         lifecycleOwner.observe(viewModel.communicationMLD) { communicationData ->
             if (!communicationData.isNullOrEmpty()) {
+
+                titleAboutMe(table)
+
                 communicationData.forEach {
                     with(table) {
                         if (!it.aboutMe.isNullOrEmpty()) {
-                            addCell(
-                                addValueCell(
-                                    it.aboutMe,
-                                    style.template_2_Arial_11f(),
-                                    bottom = 5f
-                                )
+
+                            val valuesAboutMe = listOf(
+                                it.aboutMe to style.template_2_Arial_11f(),
                             )
+
+                            var aboutMe = addValueSameCell(
+                                values = valuesAboutMe,
+                                paddingBottom = 5f
+                            )
+                            addCell(aboutMe)
                         }
                     }
                 }
-
             }
         }
     }
@@ -603,72 +547,61 @@ class Template_2 @Inject constructor(
     fun titleExperience(table: Table) {
         var title = requireActivity.resources.getString(R.string.Experience)
         table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLine(widthRight))
+        table.addCell(createLineCell(widthRight))
     }
 
     fun informationExperience(table: Table) {
         lifecycleOwner.observe(viewModel.experienceMLD) { experience ->
             if (!experience.isNullOrEmpty()) {
+
+                titleExperience(table)
+
                 experience?.forEach {
                     with(table) {
+
                         if (!it.positionName.isNullOrEmpty()) {
 
-                            addCell(
-                                addValueCell(
-                                    it.positionName,
-                                    style.template_2_Heebo_Medium_14f()
-                                )
-                            )?.setMarginTop(-5f)
+                            val valuesPosition = listOf(
+                                it.positionName to style.template_2_Heebo_Medium_14f(),
+                            )
 
-
+                            var positionName = addValueSameCell(
+                                values = valuesPosition,
+                            )
+                            addCell(positionName)
+                        }
+                        if (!it.companyName.isNullOrEmpty()) {
                             var companyNameAndDate = Cell()
-                            if (!it.finishDate.isNullOrEmpty()) {
-                                companyNameAndDate = addValueSameCell(
-                                    val1 = it.companyName,
-                                    styles1 = style.template_2_Arial_Bold_11f()?.setMarginTop(-14f),
-                                    val2 = requireActivity.resources.getString(R.string.verticaLine),
-                                    styles2 = style.template_2_Arial_Gray_11f(),
-                                    val3 = it.startDate,
-                                    styles3 = style.template_2_Arial_Gray_11f(),
-                                    val4 = requireActivity.resources.getString(R.string.line),
-                                    styles4 = style.template_2_Arial_Gray_11f(),
-                                    val5 = it.finishDate,
-                                    styles5 = style.template_2_Arial_Gray_11f(),
-                                    top = -10f
-                                )
-                            } else {
-                                companyNameAndDate = addValueSameCell(
-                                    val1 = it.companyName,
-                                    styles1 = style.template_2_Arial_Bold_11f()?.setMarginTop(-14f),
-                                    val2 = requireActivity.resources.getString(R.string.verticaLine),
-                                    styles2 = style.template_2_Arial_Gray_11f(),
-                                    val3 = it.startDate,
-                                    styles3 = style.template_2_Arial_Gray_11f(),
-                                    val4 = requireActivity.resources.getString(R.string.line),
-                                    styles4 = style.template_2_Arial_Gray_11f(),
-                                    val5 = requireActivity.resources.getString(R.string.continueEx),
-                                    styles5 = style.template_2_Arial_Gray_11f(),
-                                    top = -10f
-                                )
-                            }
+
+                            val valuesDate = listOf(
+                                it.companyName to style.template_2_Arial_Bold_11f(),
+                                requireActivity.resources.getString(R.string.verticaLine) to style.template_2_Arial_Gray_11f(),
+                                it.startDate to style.template_2_Arial_Gray_11f(),
+                                requireActivity.resources.getString(R.string.line) to style.template_2_Arial_Gray_11f(),
+                                if (!it.finishDate.isNullOrEmpty()) {
+                                    it.finishDate to style.template_2_Arial_Gray_11f()
+                                } else {
+                                    requireActivity.resources.getString(R.string.present) to style.template_2_Arial_Gray_11f()
+                                }
+                            )
+
+                            companyNameAndDate = addValueSameCell(
+                                values = valuesDate,
+                                paddingTop = -10f,
+                                paddingLeft = 2f
+                            )
 
                             addCell(companyNameAndDate)
+                        }
 
+                        if (!it.infoAboutJob.isNullOrEmpty()) {
+                            val valuesInfo = listOf(
+                                it.infoAboutJob to style.template_2_Arial_905f(),
+                            )
 
-                            var point = image.image(context, R.drawable.baseline_point_24)
-                            var cellInfo = Cell()
-
-                            if (!it.infoAboutJob.isNullOrEmpty()) {
-                                cellInfo = addValueSameCell(
-                                    point,
-                                    val1 = it.infoAboutJob,
-                                    styles1 = style.template_2_Arial_10f(),
-                                    //       top = -5f
-                                )
-                            } else {
-                                addCell(emptyCell())
-                            }
-
+                            var cellInfo = addValueSameCell(
+                                values = valuesInfo
+                            )
                             addCell(cellInfo)
                         }
                     }
@@ -677,51 +610,60 @@ class Template_2 @Inject constructor(
         }
     }
 
-
     // Education
     fun titleEducation(table: Table) {
         var title = requireActivity.resources.getString(R.string.Education)
         table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLine(widthRight))
+        table.addCell(createLineCell(widthRight))
     }
 
     fun informationEducation(table: Table) {
         lifecycleOwner.observe(viewModel.educationMLD) { education ->
             if (!education.isNullOrEmpty()) {
+
+                titleEducation(table)
+
                 education?.forEach {
                     with(table) {
                         if (!it.schoolName.isNullOrEmpty()) {
-
+                            var schoolNameAndGano = Cell()
                             if (!it.gano.isNullOrEmpty()) {
-                                addCell(
-                                    addValueSameCell(
-                                        val1 = it.schoolName,
-                                        styles1 = style.template_2_Heebo_Medium_14f(),
-                                        val2 = requireActivity.resources.getString(R.string.verticaLine),
-                                        styles2 = style.template_2_Arial_Gray_105f(),
-                                        val3 = it.gano,
-                                        styles3 = style.template_2_Arial_Gray_10f(),
-                                        top = -5f
-                                    )
+
+                                val valuesSchool = listOf(
+                                    it.schoolName to style.template_2_Heebo_Medium_14f(),
+                                    requireActivity.resources.getString(R.string.verticaLine) to style.template_2_Arial_Gray_105f(),
+                                    it.gano to style.template_2_Arial_Gray_10f(),
+                                )
+                                schoolNameAndGano = addValueSameCell(
+                                    values = valuesSchool
                                 )
                             } else {
-                                addCell(emptyCell())
+                                val valuesSchool = listOf(
+                                    it.schoolName to style.template_2_Heebo_Medium_14f()
+                                )
+                                schoolNameAndGano = addValueSameCell(
+                                    values = valuesSchool
+                                )
                             }
 
-                            var departmentNameAndDate = addValueSameCell(
-                                val1 = it.departmentName,
-                                styles1 = style.template_2_Arial_Bold_105f()?.setMarginTop(-14f),
-                                val2 = requireActivity.resources.getString(R.string.verticaLine),
-                                styles2 = style.template_2_Arial_Gray_105f(),
-                                val3 = it.startDate,
-                                styles3 = style.template_2_Arial_Gray_105f(),
-                                val4 = requireActivity.resources.getString(R.string.line),
-                                styles4 = style.template_2_Arial_Gray_105f(),
-                                val5 = it.finishDate,
-                                styles5 = style.template_2_Arial_Gray_105f(),
-                                top = -10f
+                            addCell(schoolNameAndGano)
+                        }
+
+                        if (!it.departmentName.isNullOrEmpty()) {
+                            val valuesDepartment = listOf(
+                                it.departmentName to style.template_2_Arial_Bold_105f(),
+                                requireActivity.resources.getString(R.string.verticaLine) to style.template_2_Arial_Gray_105f(),
+                                it.startDate to style.template_2_Arial_Gray_105f(),
+                                requireActivity.resources.getString(R.string.line) to style.template_2_Arial_Gray_105f(),
+                                it.finishDate to style.template_2_Arial_Gray_105f(),
                             )
 
+
+                            var departmentNameAndDate = addValueSameCell(
+                                values = valuesDepartment,
+                                paddingTop = -10f,
+                                paddingLeft = 2f
+                            )
                             addCell(departmentNameAndDate)
                         }
                     }
@@ -730,10 +672,60 @@ class Template_2 @Inject constructor(
         }
     }
 
-    // Empty
-    fun titleEmpty(table: Table) {
-        table.addCell(emptyCell())
+    // Education
+    fun titleCertificates(table: Table) {
+        var title = requireActivity.resources.getString(R.string.Certificates)
+        table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
+        table.addCell(createLineCell(widthRight))
     }
 
+    fun informationCertificates(table: Table) {
+        lifecycleOwner.observe(viewModel.certificateMLD) { certificates ->
+            if (!certificates.isNullOrEmpty()) {
 
+                titleCertificates(table)
+
+                certificates?.forEach {
+                    with(table) {
+                        if (!it.certificateProjectOrAwardName.isNullOrEmpty()) {
+                            val valuesCertificates = listOf(
+                                it.certificateProjectOrAwardName to style.template_2_Heebo_Medium_14f(),
+                            )
+
+                            var certificateName = addValueSameCell(
+                                values = valuesCertificates,
+                                paddingTop = -5f
+                            )
+                            addCell(certificateName)
+                        }
+
+                        if (!it.educationPlace.isNullOrEmpty()) {
+                            val valuesCertificates = listOf(
+                                it.educationPlace to style.template_2_Arial_Bold_11f(),
+                                requireActivity.resources.getString(R.string.verticaLine) to style.template_2_Arial_Gray_11f(),
+                                it.startDate to style.template_2_Arial_Gray_11f(),
+                                requireActivity.resources.getString(R.string.line) to style.template_2_Arial_Gray_11f(),
+                                it.finishDate to style.template_2_Arial_Gray_11f(),
+                            )
+
+                            var educationPlaceAndDate = addValueSameCell(
+                                values = valuesCertificates,
+                                paddingTop = -10f
+                            )
+                            addCell(educationPlaceAndDate)
+                        }
+
+                        if (!it.aboutCertificate.isNullOrEmpty()) {
+                            val valuesAboutCertificates = listOf(
+                                it.aboutCertificate to style.template_2_Arial_905f()
+                            )
+
+                            var cellInfo = addValueSameCell(values = valuesAboutCertificates)
+                            addCell(cellInfo)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

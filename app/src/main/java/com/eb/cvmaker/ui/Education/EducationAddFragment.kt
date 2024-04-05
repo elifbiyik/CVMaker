@@ -36,8 +36,8 @@ class EducationAddFragment : Fragment() {
 
         binding = FragmentEducationAddBinding.inflate(inflater, container, false)
 
-        if (id != null && nameDep != null && nameSch != null && dateSt != null && dateFin != null) {
-
+        if (id != null// && nameSch != null && dateSt != null && dateFin != null) {
+        ){
             binding.etDepartmentName.setText(nameDep)
             binding.etSchoolName.setText(nameSch)
 
@@ -61,7 +61,7 @@ class EducationAddFragment : Fragment() {
                 var finishDate = etFinishDate.text.toString().trim()
 
 
-                if (school.isNotEmpty() && department.isNotEmpty() && startDate.isNotEmpty() && finishDate.isNotEmpty()) {
+                if (school.isNotEmpty() && startDate.isNotEmpty() && finishDate.isNotEmpty()) {
                     if (id != null) {
                         var item = Education(id, school, department, startDate, finishDate, gano)
                         update(item)

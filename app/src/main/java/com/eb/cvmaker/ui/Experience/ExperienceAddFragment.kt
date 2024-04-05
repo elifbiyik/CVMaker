@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import com.eb.cvmaker.Model.Experience
@@ -13,7 +14,7 @@ import com.eb.cvmaker.databinding.FragmentExperienceAddBinding
 import com.eb.cvmaker.message
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
-import com.eb.cvmaker.ui.References.ReferencesFragment
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,7 +32,7 @@ class ExperienceAddFragment : Fragment() {
         var nameCom = arguments?.getString("nameCom")
         var namePos = arguments?.getString("namePos")
         var dateSt = arguments?.getString("dateSt")
-        var dateFin = arguments?.getString("dateFin") ?: requireActivity().resources.getString(R.string.continueEx)
+        var dateFin = arguments?.getString("dateFin") ?: requireActivity().resources.getString(R.string.present)
         var info = arguments?.getString("info")
 
         binding = FragmentExperienceAddBinding.inflate(inflater, container, false)
@@ -60,6 +61,7 @@ class ExperienceAddFragment : Fragment() {
         }
 
         with(binding) {
+
             btnAdd.setOnClickListener {
                 var company = etCompanyName.text.toString()
                 var position = etPositionName.text.toString()
@@ -68,15 +70,14 @@ class ExperienceAddFragment : Fragment() {
                 var finishDate :String
 
                 if(!etFinishDateMonth.text.isNullOrEmpty() && !etFinishDateYear.text.isNullOrEmpty()) {
-                    finishDate =
-                        etFinishDateMonth.text.toString() + "." + etFinishDateYear.text.toString()
+                    finishDate = etFinishDateMonth.text.toString() + "." + etFinishDateYear.text.toString()
                 } else {
                     finishDate = etFinishDateMonth.text.toString() // Boş bırakıldığında (.) yazmasın diye month'u yazdırdık ama month yazmayack zaten (continue yazacak)
                 }
 
-                if (company.isNotEmpty() && position.isNotEmpty() && startDate.isNotEmpty()) {
+                if (company.isNotEmpty() && position.isNotEmpty() && etStartDateMonth.text.toString().isNotEmpty() && etStartDateYear.text.toString().isNotEmpty()) {
                     if (id != null) {
-                        var item = Experience(id, company, position, info, startDate, finishDate)
+                        var item = Experience(id = id, companyName = company, positionName = position, infoAboutJob = info, startDate = startDate, finishDate = finishDate)
                         update (item)
                     } else {
                         var item = Experience(
@@ -113,7 +114,7 @@ class ExperienceAddFragment : Fragment() {
                     requireContext(),
                     requireActivity().resources.getString(R.string.messageForSaved)
                 )
-            replace(ReferencesFragment())
+            replace(ExperienceFragment())
         }
     }
 
