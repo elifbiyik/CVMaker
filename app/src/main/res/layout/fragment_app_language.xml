@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui._Create.ChooseTemplateFragment">
+    android:orientation="vertical"
+    tools:context=".ui.AppLanguageFragment">
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -21,10 +22,8 @@
             android:gravity="center"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/metropolis_regular"
-            android:text="@string/template"
-            android:textSize="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/chooseLanguage"
+            android:textSize="24dp"
             android:textStyle="bold" ></TextView>
     </LinearLayout>
 
@@ -34,9 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/item_choose_template">
+        tools:listitem="@layout/item_choose_app_language">
 
     </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>
-
-

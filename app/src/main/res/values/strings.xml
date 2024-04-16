@@ -39,13 +39,13 @@
     <string name="address">Address</string>
     <string name="birtday">Birtday</string>
     <string name="gender">Gender</string>
-    <string name="drivingLicence">Driving Licence</string>
+    <string name="drivingLicence">Driver\'s License</string>
     <string name="military">Military</string>
 
     <!-- Education -->
     <string name="schoolName">School Name * </string>
     <string name="departmentName">Department Name</string>
-    <string name="gano">GANO</string>
+    <string name="gano">GPA</string>
     <string name="finishDateExpected">Finish Date (expected) * </string>
 
     <!-- Experience -->
@@ -81,6 +81,9 @@
 
     <string name="messageForEmpty">Empty fields must be filled</string>
     <string name="messageForSaved">Saved Successfully</string>
+    <string name="messageForCouldntCreate">Could not create PDF</string>
+    <string name="messageForDownload">PDF saved successfully to Downloads folder!</string>
+    <string name="messageForFailed">Failed to save PDF!</string>
 
     <string name="titleForAlert">"Are you sure?"</string>
     <string name="messageForAlert">Are you sure want to delete ? </string>
@@ -90,6 +93,7 @@
     <string name="buttonForOK">OK</string>
 
     <string name="template">TEMPLATES</string>
+    <string name="chooseLanguage">Language</string>
 
     <string name="CV">Created CV</string>
     <string name="dots">\u00A0 : \u00A0</string>
@@ -109,6 +113,12 @@
     <string name="alert_Yes">Yes</string>
 
 
+    <string name="sampleTemplate">Sample Template</string>
 
-    <string name="sampleTemplate">SampleTemplate</string>
+    <string name="YourCVs">Your CVs</string>
+
+    <string name="sharePDF">Share PDF</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

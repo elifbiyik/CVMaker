@@ -7,14 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
-import com.eb.cvmaker.Model.Communication
 import com.eb.cvmaker.Model.SocialMedia
 import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.FragmentSocialMediaBinding
 import com.eb.cvmaker.message
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
-import com.eb.cvmaker.ui._Create.InformationsFragment
+import com.eb.cvmaker.ui.InformationsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

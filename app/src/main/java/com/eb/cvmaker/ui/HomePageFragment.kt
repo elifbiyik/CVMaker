@@ -1,6 +1,5 @@
 package com.eb.cvmaker.ui
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,32 +8,26 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.eb.cvmaker.Adapter.HomePageAdapter
-import com.eb.cvmaker.MainActivity
+import com.eb.cvmaker.Model.AppLanguage
 import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.FragmentHomePageBinding
 import com.eb.cvmaker.replace
-import com.eb.cvmaker.ui._Create.InformationsFragment
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import java.io.File
 import java.util.Locale
-
 
 @AndroidEntryPoint
 class HomePageFragment : Fragment() {
 
     private lateinit var binding: FragmentHomePageBinding
-    private val viewModel: HomePageVM by viewModels()
     private lateinit var banner1: AdView
     private lateinit var banner2: AdView
-    private lateinit var adapter: HomePageAdapter
-
+    private lateinit var banner3: AdView
+    lateinit var appLanguage: String
+    private val sharedPreferencesManager: SharedPreferencesManager? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,79 +44,65 @@ class HomePageFragment : Fragment() {
         banner2 = binding.adView2
         banner2.loadAd(adRequest)
 
-        lifecycleScope.launch {
-            var list = viewModel.getTemplate()
-            adapter = HomePageAdapter(list)
-            binding.recyclerView.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            binding.recyclerView.adapter = adapter
-        }
+        banner3 = binding.adView3
+        banner3.loadAd(adRequest)
 
         binding.btnCreate.setOnClickListener {
             replace(InformationsFragment())
         }
 
-
-        var language = getLocaleSharedPreferances()
-        binding.tvLanguage.text = language
-        language?.let { updateLanguageUI(it) }
-
-        binding.switchLanguage.setOnClickListener {
-            if (binding.switchLanguage.isChecked) {
-                setLocale("en")
-                updateLanguageUI("en")
-
-            } else {
-                setLocale("tr")
-                updateLanguageUI("tr")
+        // Oluşturulan CV
+        var pdfFilePath = getPdfPathSharedPreferances()
+        if (!pdfFilePath.isNullOrEmpty()) {
+            binding.title.visibility = View.VISIBLE
+            binding.createdCV.visibility = View.VISIBLE
+            val file = File(pdfFilePath)
+            if (file.exists()) {
+                loadPdfFromPath(pdfFilePath)
             }
+        } else {
+            binding.title.visibility = View.GONE
+            binding.createdCV.visibility = View.GONE
         }
 
+        chooseLanguage()
+
+        binding.languageFlagAndName.setOnClickListener {
+            replace(AppLanguageFragment())
+        }
 
         return binding.root
     }
 
-    fun setLocale(selectedLocale: String) {
-        val locale = Locale(selectedLocale) //gönderdiğimiz parametreye göre lokalimizi ayarladık.
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.setLocale(locale)
-        requireActivity().baseContext.resources.updateConfiguration(
-            config,
-            requireActivity().baseContext.resources.displayMetrics
-        )
-        writeLocaleSharedPreferances(selectedLocale)//dil seçimini cihaza kaydedecek fonksiyonu çağırıyoruz.
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        requireActivity().finish()//mevcut acivity i bitir.
-        startActivity(intent)//activity i baştan yükle
-    }
+    fun chooseLanguage() {
+        //          var appLanguage = getLocaleSharedPreferances()
+        appLanguage = Locale.getDefault().language
 
-    fun writeLocaleSharedPreferances(selectedLocale: String) {
-        var sharedPreferences =
-            requireContext().getSharedPreferences("language", AppCompatActivity.MODE_PRIVATE)
-        var editor = sharedPreferences.edit()
-        editor.putString(
-            "selectedLocale",
-            selectedLocale
-        )
-        editor.apply()
-    }
-
-    fun getLocaleSharedPreferances(): String? {
-        var sharedPreferences =
-            context?.getSharedPreferences("language", AppCompatActivity.MODE_PRIVATE)
-        var language = sharedPreferences?.getString("selectedLocale", "")
-        return language
-    }
-
-    fun updateLanguageUI(language: String) {
-        if (language == "en") {
-            binding.tvLanguage.setText(language)
-            binding.switchLanguage.isChecked = true
-        } else {
-            binding.tvLanguage.setText(language)
-            binding.switchLanguage.isChecked = false
+        if (appLanguage.isNullOrEmpty() || appLanguage == "") {
+            appLanguage = Locale.getDefault().language
         }
+
+        AppLanguage.listAppLanguages.forEach {
+            with(binding) {
+                if (appLanguage == it.code) {
+                    tvLang.setText(it.languageName)
+                    it.flag?.let { it1 -> image.setImageResource(it1) }
+                }
+            }
+        }
+    }
+
+    fun getPdfPathSharedPreferances(): String? {
+        return sharedPreferencesManager?.getPdfPath()
+    }
+
+    fun loadPdfFromPath(filePath: String) {
+        binding.PdfViewer.fromFile(File(filePath))
+            .defaultPage(0)
+            .enableSwipe(true)
+            .swipeHorizontal(false)
+            .enableAntialiasing(true)
+            .load()
     }
 
     private fun alertDialog() {
@@ -148,6 +127,7 @@ class HomePageFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             alertDialog()
         }

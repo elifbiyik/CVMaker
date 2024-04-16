@@ -1,8 +1,6 @@
 package com.eb.cvmaker.Repository
 
-import com.eb.cvmaker.Model.References
 import com.eb.cvmaker.Model.SocialMedia
-import com.eb.cvmaker.dB.ReferencesDao
 import com.eb.cvmaker.dB.SocialMediaDao
 import javax.inject.Inject
 

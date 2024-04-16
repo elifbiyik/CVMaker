@@ -13,7 +13,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         loadFragment(HomePageFragment())
-
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -21,4 +20,5 @@ class MainActivity : AppCompatActivity() {
         transaction.replace(R.id.constraint, fragment, fragment.javaClass.simpleName)
         transaction.commit()
     }
+
 }

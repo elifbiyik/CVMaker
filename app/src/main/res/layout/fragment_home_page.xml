@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.HomePageFragment">
 
     <com.google.android.gms.ads.AdView
@@ -21,13 +21,54 @@
 
     <LinearLayout
         android:id="@+id/llLanguage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adView">
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="@string/chooseLanguage"
+            android:textSize="16dp"
+            android:textStyle="bold"></TextView>
+
+        <LinearLayout
+            android:id="@+id/languageFlagAndName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/background"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_launcher_background" />
+
+            <TextView
+                android:id="@+id/tvLang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Turkce"
+                android:textSize="18sp"></TextView>
+
+        </LinearLayout>
+
+
+        <!--
         <TextView
             android:id="@+id/tvLanguage"
             android:layout_width="wrap_content"
@@ -45,6 +86,7 @@
             app:layout_constraintHorizontal_bias="0.961"
             app:layout_constraintStart_toStartOf="@+id/adView"
             app:layout_constraintTop_toBottomOf="@+id/adView" />
+-->
 
     </LinearLayout>
 
@@ -53,8 +95,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
         android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
         android:backgroundTint="@color/backgroundPrimary"
         app:layout_constraintEnd_toEndOf="@+id/llLanguage"
         app:layout_constraintStart_toStartOf="@+id/llLanguage"
@@ -82,21 +124,93 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-7296724377570892/2687259893"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCreate"></com.google.android.gms.ads.AdView>
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/queensides"
+        android:text="@string/YourCVs"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/adView2"
+        tools:layout_editor_absoluteX="0dp"></TextView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/createdCV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_template"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="172dp"
+            android:layout_height="244dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.github.barteksc.pdfviewer.PDFView
+                    android:id="@+id/PdfViewer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/white"
+                    android:layout_margin="5dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="410dp"
         android:layout_height="302dp"
-        android:layout_marginTop="32dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCreate"
+        app:layout_constraintTop_toBottomOf="@+id/title"
         tools:ignore="MissingConstraints"
-        tools:listitem="@layout/item_all_templates"></androidx.recyclerview.widget.RecyclerView>
+        tools:listitem="@layout/item_created_cv"></androidx.recyclerview.widget.RecyclerView>
+
+-->
+    <!--
+        tools:listitem="@layout/item_all_templates
+    -->
 
     <com.google.android.gms.ads.AdView
-        android:id="@+id/adView2"
+        android:id="@+id/adView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

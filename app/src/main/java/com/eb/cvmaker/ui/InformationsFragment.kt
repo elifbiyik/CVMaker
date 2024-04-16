@@ -1,4 +1,4 @@
-package com.eb.cvmaker.ui._Create
+package com.eb.cvmaker.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,25 +13,16 @@ import com.eb.cvmaker.ui.Certificates.CertificatesFragment
 import com.eb.cvmaker.ui.Communication.CommunicationFragment
 import com.eb.cvmaker.ui.Education.EducationFragment
 import com.eb.cvmaker.ui.Experience.ExperienceFragment
-import com.eb.cvmaker.ui.HomePageFragment
 import com.eb.cvmaker.ui.Language.LanguagesFragment
 import com.eb.cvmaker.ui.References.ReferencesFragment
 import com.eb.cvmaker.ui.SocialMedia.SocialMediaFragment
+import com.eb.cvmaker.ui._Create.ChooseTemplateFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class InformationsFragment : Fragment() {
 
-
     private lateinit var binding: FragmentInformationsBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +30,6 @@ class InformationsFragment : Fragment() {
     ): View? {
 
         binding = FragmentInformationsBinding.inflate(inflater, container, false)
-
 
         with(binding) {
             llAbilities.setOnClickListener {

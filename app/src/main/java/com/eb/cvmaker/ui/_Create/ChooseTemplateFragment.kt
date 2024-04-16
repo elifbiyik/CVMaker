@@ -8,10 +8,10 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -19,11 +19,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.eb.cvmaker.Adapter.ChooseTemplateAdapter
-import com.eb.cvmaker.Model.Communication
 import com.eb.cvmaker.databinding.FragmentChooseTemplateBinding
 import com.eb.cvmaker.message
-import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
+import com.eb.cvmaker.ui.SharedPreferencesManager
 import com.itextpdf.kernel.geom.PageSize
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
@@ -31,6 +30,7 @@ import com.itextpdf.layout.Document
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChooseTemplateFragment : Fragment() {
@@ -38,6 +38,8 @@ class ChooseTemplateFragment : Fragment() {
     private lateinit var binding: FragmentChooseTemplateBinding
     private val viewModel: ChooseTemplateVM by viewModels()
     private lateinit var adapter: ChooseTemplateAdapter
+
+    private val sharedPreferencesManager: SharedPreferencesManager ?= null
 
     var PERMISSION_CODE = 101
     var FILE_NAME = "CV.pdf"
@@ -49,10 +51,7 @@ class ChooseTemplateFragment : Fragment() {
         binding = FragmentChooseTemplateBinding.inflate(inflater, container, false)
 
         lifecycleScope.launch {
-            var list = ArrayList<Uri>()
-
-            list = viewModel.getTemplate()
-            var listSize = list.size
+            var list = viewModel.getTemplate()
 
             adapter = ChooseTemplateAdapter(list) { uri, index ->
                 createCV(index)
@@ -96,14 +95,13 @@ class ChooseTemplateFragment : Fragment() {
         val pdfWriter = PdfWriter(filePath.absolutePath)
         val pdf = PdfDocument(pdfWriter)
 
-
         val document = Document(pdf, PageSize.A4)
 //  Document -> iText5
 
         when (index) {
             0 -> Template_1(viewModel, requireActivity(), requireContext()).generateCV(document)
             1 -> Template_2(viewModel, requireActivity(), requireContext()).generateCV(document)
-            2 -> Template_2(viewModel, requireActivity(), requireContext()).generateCV(document)
+            //      2 -> Template_3(viewModel, requireActivity(), requireContext()).generateCV(document)
         }
 
         // Belge içeriği varsa kapatılmalı. Belgede veri yoksa kapatma yapılmıyor. Kapatmadığı için crash oluyor.  Hata veriyor. (Document has no pages.)
@@ -113,19 +111,14 @@ class ChooseTemplateFragment : Fragment() {
             message(requireContext(), "PDF is empty. ")
         }
 
-        /*
-            Ana sayfadan sonra template seçtirip sonra işlem yapma ???
-            val fragment = parentFragment as ShowPDFFragment
-              fragment.viewModel.pdfFilePath = filePath.absolutePath
-              replace(InformationsFragment())
-      */
         // ShowPDF için path'i verdik
-        var bundle = Bundle()
         var fr = ShowPDFFragment()
-        bundle.putString("path", filePath.absolutePath)
-        fr.arguments = bundle
+        writePdfPathSharedPreferances(filePath.absolutePath)
         replace(fr)
+    }
 
+    fun writePdfPathSharedPreferances(pdfFilePath: String) {
+        sharedPreferencesManager?.savePdfPath(pdfFilePath)
     }
 
     fun checkPermissions(): Boolean {
@@ -140,18 +133,8 @@ class ChooseTemplateFragment : Fragment() {
             READ_EXTERNAL_STORAGE
         )
 
-        // Android 10 ve sonrasında WRITE_EXTERNAL_STORAGE izni genel depolama için değil, uygulama özel depolama alanı için kullanılır.
-        // Android 10'da WRITE_EXTERNAL_STORAGE izni tek başına Downloads klasörüne erişim sağlar.
-        // Daha düşük API seviyesi için MANAGE_EXTERNAL_STORAGE izni gerekli
-
-        val manageStoragePermission = ContextCompat.checkSelfPermission(
-            requireActivity().applicationContext,
-            MANAGE_EXTERNAL_STORAGE
-        )
-
         return writeStoragePermission == PackageManager.PERMISSION_GRANTED
                 && readStoragePermission == PackageManager.PERMISSION_GRANTED
-        //     && manageStoragePermission == PackageManager.PERMISSION_GRANTED
     }
 
     fun requestPermission() {
@@ -181,14 +164,10 @@ class ChooseTemplateFragment : Fragment() {
 
         if (requestCode == PERMISSION_CODE) {
             if (grantResults.size > 0) {
-                /*if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1]
-                    == PackageManager.PERMISSION_GRANTED
-                ) {*/
                 if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                     message(requireContext(), "Permission Granted..")
                 } else {
                     message(requireContext(), "Permission Denied..")
-                    //             finish()
                 }
             }
         }

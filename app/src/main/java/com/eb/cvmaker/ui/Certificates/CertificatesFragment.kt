@@ -16,7 +16,7 @@ import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.FragmentCertificatesBinding
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
-import com.eb.cvmaker.ui._Create.InformationsFragment
+import com.eb.cvmaker.ui.InformationsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -59,7 +59,7 @@ class CertificatesFragment : Fragment() {
                     replace(fr)
                 },
                     {
-                        var fr = CertificatesAddFragment()
+                        var fr = CertificatesFragment()
 
                         var item = Certificates(
                             it.id,

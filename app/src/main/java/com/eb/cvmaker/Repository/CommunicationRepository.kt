@@ -6,9 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
 
-class CommunicationRepository @Inject constructor(
-    private val dao: CommunicationDao, private var auth: FirebaseAuth
-) :
+class CommunicationRepository @Inject constructor(private val dao: CommunicationDao) :
     BaseRepository<Communication>(dao) {
 
     suspend fun getUserCommunicationInfo(): List<Communication> {

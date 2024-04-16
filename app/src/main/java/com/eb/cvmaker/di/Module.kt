@@ -1,6 +1,8 @@
 package com.eb.cvmaker.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.eb.cvmaker.dB.AbilitiesDao
 import com.eb.cvmaker.dB.CertificatesDao
@@ -89,9 +91,4 @@ object Module {
         return FirebaseStorage.getInstance()
     }
 
-    @Provides
-    @Singleton
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
 }

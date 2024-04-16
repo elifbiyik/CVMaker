@@ -2,46 +2,30 @@ package com.eb.cvmaker.Adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.eb.cvmaker.Model.References
 import com.eb.cvmaker.databinding.ItemReferencesBinding
 
 class ReferenceAdapter(
-    var list: List<References>, private val onClick: (References) -> Unit,
+    list: List<References>,
+    private val onClick: (References) -> Unit,
     private val onDeleteClick: (References) -> Unit
-) : RecyclerView.Adapter<ReferenceAdapter.ViewHolder>() {
+) : BaseAdapter<References, ItemReferencesBinding>(list, { binding, item ->
 
-    inner class ViewHolder(var binding: ItemReferencesBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(_list: References) {
+    with(binding) {
+        tvName.text = item.name
+        tvSurname.text = item.surname
 
-            with(binding) {
-                tvName.text = _list.name
-                tvSurname.text = _list.surname
+        root.setOnClickListener {
+            onClick(item)
+        }
 
-                root.setOnClickListener {
-                    onClick(_list)
-                }
-
-                imDelete.setOnClickListener {
-                    onDeleteClick(_list)
-                }
-            }
+        imDelete.setOnClickListener {
+            onDeleteClick(item)
         }
     }
+}) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var inflater = LayoutInflater.from(parent.context)
-        var binding = ItemReferencesBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
-    }
-
-    override fun getItemCount(): Int {
-        return list.size
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var _list = list[position]
-        holder.bind(_list)
+    override fun createBinding(inflater: LayoutInflater, parent: ViewGroup): ItemReferencesBinding {
+        return ItemReferencesBinding.inflate(inflater, parent, false)
     }
 }

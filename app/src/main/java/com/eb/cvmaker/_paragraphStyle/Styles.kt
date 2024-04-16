@@ -7,18 +7,6 @@ import com.itextpdf.layout.Style
 
 class Styles {
 
-   val pdfFontMedium_Roboto = PdfFontFactory.createFont("assets/Roboto_Mono/static/RobotoMono-Medium.ttf", PdfEncodings.IDENTITY_H, true)
-   val pdfFontBold_Roboto = PdfFontFactory.createFont("assets/Roboto_Mono/static/RobotoMono-Bold.ttf", PdfEncodings.IDENTITY_H, true)
-   val pdfFontLight_Roboto = PdfFontFactory.createFont("assets/Roboto_Mono/static/RobotoMono-Light.ttf", PdfEncodings.IDENTITY_H, true)
-
-   val pdfFontLight_Mukta = PdfFontFactory.createFont("assets/Mukta/Mukta-Light.ttf", PdfEncodings.IDENTITY_H, true)
-   val pdfFontBold_Mukta = PdfFontFactory.createFont("assets/Mukta/Mukta-Bold.ttf", PdfEncodings.IDENTITY_H, true)
-   val pdfFontSemiBold_Mukta = PdfFontFactory.createFont("assets/Mukta/Mukta-SemiBold.ttf", PdfEncodings.IDENTITY_H, true)
-   val pdfFontExtraLight_Mukta = PdfFontFactory.createFont("assets/Mukta/Mukta-ExtraLight.ttf", PdfEncodings.IDENTITY_H, true)
-   val pdfFontMedium_Mukta = PdfFontFactory.createFont("assets/Mukta/Mukta-Medium.ttf", PdfEncodings.IDENTITY_H, true)
-
-    val pdfFontMedium_Golos = PdfFontFactory.createFont("assets/Golos_Text/static/GolosText-Regular.ttf", PdfEncodings.IDENTITY_H, true)
-
     val pdfFontCalibri = PdfFontFactory.createFont("assets/calibri-font-family/calibri-regular.ttf", PdfEncodings.IDENTITY_H, true)
     val pdfFontCalibriBold = PdfFontFactory.createFont("assets/calibri-font-family/calibri-bold.ttf", PdfEncodings.IDENTITY_H, true)
     val pdfFontCalibriItalic = PdfFontFactory.createFont("assets/calibri-font-family/calibri-italic.ttf", PdfEncodings.IDENTITY_H, true)
@@ -28,8 +16,6 @@ class Styles {
     val pdfFontHeeboLight = PdfFontFactory.createFont("assets/Heebo/static/Heebo-Light.ttf", PdfEncodings.IDENTITY_H, true)
     val pdfFontHeeboThin = PdfFontFactory.createFont("assets/Heebo/static/Heebo-Thin.ttf", PdfEncodings.IDENTITY_H, true)
     val pdfFontHeeboMedium = PdfFontFactory.createFont("assets/Heebo/static/Heebo-Medium.ttf", PdfEncodings.IDENTITY_H, true)
-
-
 
 
     fun styleText(): Style? {

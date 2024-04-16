@@ -26,6 +26,4 @@ class LanguageVM @Inject constructor(var repository: LanguagesRepository) :
             userInfoMLD.value = response
         }
     }
-
-
 }

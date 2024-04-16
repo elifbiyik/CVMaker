@@ -7,7 +7,4 @@ import javax.inject.Inject
 class EducationAddRepository @Inject constructor(private val dao: EducationDao) :
     BaseRepository<Education>(dao) {
 
-    suspend fun getUserEducationInfo(): List<Education> {
-        return dao.getAllInfo()
-    }
 }

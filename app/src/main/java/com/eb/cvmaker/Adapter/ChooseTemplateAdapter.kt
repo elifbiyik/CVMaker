@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.eb.cvmaker.ImageLoad
+import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.ItemChooseTemplateBinding
 
 class ChooseTemplateAdapter(
@@ -19,9 +20,9 @@ class ChooseTemplateAdapter(
 
             with(binding) {
 
-                imTemplate.ImageLoad(imageUri)
+                image.ImageLoad(imageUri)
 
-                itemTemplate.setOnClickListener {
+                image.setOnClickListener {
                     onClick(imageUri, absoluteAdapterPosition)
                 }
             }

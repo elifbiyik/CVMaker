@@ -16,7 +16,7 @@ import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.FragmentReferencesBinding
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
-import com.eb.cvmaker.ui._Create.InformationsFragment
+import com.eb.cvmaker.ui.InformationsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -83,7 +83,6 @@ class ReferencesFragment : Fragment() {
         }
 
         return binding.root
-
     }
 
     fun showDialog(fr: Fragment, item: References) {

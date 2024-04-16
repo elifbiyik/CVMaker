@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
-import com.eb.cvmaker.Model.Communication
 import com.eb.cvmaker.Model.Education
 import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.FragmentEducationAddBinding
@@ -36,8 +35,7 @@ class EducationAddFragment : Fragment() {
 
         binding = FragmentEducationAddBinding.inflate(inflater, container, false)
 
-        if (id != null// && nameSch != null && dateSt != null && dateFin != null) {
-        ){
+        if (id != null){
             binding.etDepartmentName.setText(nameDep)
             binding.etSchoolName.setText(nameSch)
 
@@ -101,13 +99,6 @@ class EducationAddFragment : Fragment() {
         isSuccessful()
     }
 
-    override fun onResume() {
-        super.onResume()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            replace(EducationFragment())
-        }
-    }
-
     fun isSuccessful() {
         observe(viewModel.isSuccessfulMLD) {
             if (it == true)
@@ -115,6 +106,13 @@ class EducationAddFragment : Fragment() {
                     requireContext(),
                     requireActivity().resources.getString(R.string.messageForSaved)
                 )
+            replace(EducationFragment())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             replace(EducationFragment())
         }
     }

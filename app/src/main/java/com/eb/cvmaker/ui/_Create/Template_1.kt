@@ -21,20 +21,6 @@ import com.itextpdf.layout.property.TextAlignment
 import com.itextpdf.layout.property.UnitValue
 import javax.inject.Inject
 
-
-////https://github.com/itext/itext-java/tree/develop/layout/src/main/java/com/itextpdf/layout/borders
-/*
-           addCell(Cell().add(Paragraph(it.languageName)).setBorder(Border.NO_BORDER))
-           addCell(Cell().add(Paragraph(":")).setBorder(Border.NO_BORDER))
-           addCell(Cell().add(Paragraph(it.level)).setBorder(Border.NO_BORDER))
-
-         Böyle yazınca borderlar gitmiyor. Bordersız yukardaki gibi oluyor sadece
-         addCell(it.languageName).setBorder(Border.NO_BORDER))
-         addCell(":").setBorder(Border.NO_BORDER))
-         addCell(it.level).setBorder(Border.NO_BORDER))
- */
-
-
 class Template_1 @Inject constructor(
     private val viewModel: ChooseTemplateVM,
     var requireActivity: FragmentActivity,
@@ -45,7 +31,7 @@ class Template_1 @Inject constructor(
     var image = Images()
 
     // lifecycleOwner fragment'ın yaşam döngüsü olaylarını gözlemlemek için kullanılır.
-    val lifecycleOwner = requireActivity as LifecycleOwner // Assuming you're in a fragment
+    val lifecycleOwner = requireActivity as LifecycleOwner
 
 
     fun generateCV(document: Document) {

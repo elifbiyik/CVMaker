@@ -14,11 +14,6 @@ open class BaseVM<T> @Inject constructor(private val repository: BaseRepository<
     open var userInfoMLD = MutableLiveData<List<T>>()
     var isSuccessfulMLD = MutableLiveData<Boolean>()
 
-/*
-    init {
-        getAllData()
-    }
-*/
 
     fun saveData(userData: T) {
         viewModelScope.launch(Dispatchers.Main) {
@@ -42,13 +37,4 @@ open class BaseVM<T> @Inject constructor(private val repository: BaseRepository<
             isSuccessfulMLD.value = isSuccessful
         }
     }
-/*
-    fun getAllData() {
-        viewModelScope.launch(Dispatchers.Main) {
-            val response = repository.getData()
-            userInfoMLD.value = response
-        }
-    }
-    */
-
 }

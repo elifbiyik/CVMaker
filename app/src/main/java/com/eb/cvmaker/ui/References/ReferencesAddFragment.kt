@@ -37,9 +37,7 @@ class ReferencesAddFragment : Fragment() {
 
         binding = FragmentReferencesAddBinding.inflate(inflater, container, false)
 
-
         binding.etPhone.addTextChangedListener(PhoneNumberFormattingTextWatcher("TR"))
-
         binding.etPhone.setOnClickListener {
             val formattedNumber = binding.etPhone.text.toString().formatPhone()
             if (formattedNumber != null) {

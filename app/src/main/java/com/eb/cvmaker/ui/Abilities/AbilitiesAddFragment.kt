@@ -23,9 +23,6 @@ class AbilitiesAddFragment : Fragment() {
     private val viewModel: AbilitiesAddVM by viewModels()
     var level = ""
 
-    //   private val seekBarSteps = 5
-    //   private val maxSeekBarValue = seekBarSteps - 1
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

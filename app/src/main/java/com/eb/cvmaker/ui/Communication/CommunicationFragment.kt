@@ -1,21 +1,14 @@
 package com.eb.cvmaker.ui.Communication
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
-import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.telephony.PhoneNumberFormattingTextWatcher
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,13 +20,11 @@ import com.eb.cvmaker.formatPhone
 import com.eb.cvmaker.message
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
-import com.eb.cvmaker.ui._Create.InformationsFragment
-import com.itextpdf.layout.element.Image
+import com.eb.cvmaker.ui.InformationsFragment
+import com.eb.cvmaker.ui.SharedPreferencesManager
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.ByteArrayOutputStream
-
 
 @AndroidEntryPoint
 class CommunicationFragment : Fragment() {
@@ -41,7 +32,9 @@ class CommunicationFragment : Fragment() {
     private lateinit var binding: FragmentCommunicationBinding
     private val viewModel: CommunicationVM by viewModels()
     private val REQUEST_IMAGE_GALLERY = 1
-    private var imageUri: Uri? = null // Fotoğrafın adresi
+    private var imageUri: Uri? = null
+
+    private val sharedPreferencesManager: SharedPreferencesManager ?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +42,6 @@ class CommunicationFragment : Fragment() {
     ): View? {
 
         binding = FragmentCommunicationBinding.inflate(inflater, container, false)
-
 
         binding.etPhone.addTextChangedListener(PhoneNumberFormattingTextWatcher("TR"))
         binding.etPhone.setOnClickListener {
@@ -161,15 +153,12 @@ class CommunicationFragment : Fragment() {
             .into(binding.imProfile)
     }
 
-
     fun getUserInfo(userInfo: Communication) {
         with(binding) {
 
             if (!userInfo.image.isNullOrEmpty()) {
               profiles(userInfo.image!!)
-            } /*else {
-                profiles(R.drawable.communication)
-            }*/
+            }
 
             if (!userInfo.name.isNullOrEmpty()) {
                 etUsername.setText(userInfo.name)
@@ -272,7 +261,7 @@ class CommunicationFragment : Fragment() {
     private fun userProfile() {
         val intent = Intent(Intent.ACTION_PICK) //ACTION_GET_CONTENT
         intent.type = "image/*" //"*/*"  // Tüm dosya türlerini seçmek için
-        startActivityForResult(intent, 1)
+        startActivityForResult(intent, REQUEST_IMAGE_GALLERY)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -287,13 +276,9 @@ class CommunicationFragment : Fragment() {
                     binding.imProfile.setImageURI(croppedUri)
                     imageUri = croppedUri!!
                     val filePath = croppedUri.path
-                        //getRealPathFromUri(croppedUri)
 
-                    var sharedPreferences =
-                        requireContext().getSharedPreferences("userImage", AppCompatActivity.MODE_PRIVATE)
-                    var editor = sharedPreferences.edit()
-                    editor.putString("imagePath", filePath)
-                    editor.apply()
+                    filePath?.let { it1 -> sharedPreferencesManager?.saveUserImage(it1) }
+
                 } else {
                     val uri = data.data
                     uri?.let { it1 -> cropImages(it1) } // Kullanıcı resim seçimi işlemi tamamlanmışsa kırpma işlemine geç
@@ -301,28 +286,6 @@ class CommunicationFragment : Fragment() {
             }
         }
     }
-
-
-  /*  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            data?.data?.let { uri ->
-
-                cropImages(uri)
-
-                val filePath = getRealPathFromUri(uri)
-
-                var sharedPreferences =
-                    requireContext().getSharedPreferences("userImage", AppCompatActivity.MODE_PRIVATE)
-                var editor = sharedPreferences.edit()
-                editor.putString("imagePath", filePath)
-                editor.apply()
-
-            }
-        }
-    }
-*/
 
     fun cropImages (uri : Uri) {
         CropImage.activity(uri)
@@ -335,25 +298,10 @@ class CommunicationFragment : Fragment() {
             .start(requireContext(), this)
     }
 
-
-    private fun getRealPathFromUri(uri: Uri): String? {
-        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
-        cursor?.let {
-            it.moveToFirst()
-            val index = it.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-            val filePath = it.getString(index)
-            it.close()
-            return filePath
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            replace(InformationsFragment())
         }
-        return null
     }
-
-
-
 }
-
-
-
-
-
-

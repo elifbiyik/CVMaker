@@ -43,9 +43,6 @@ class LanguageAddFragment : Fragment() {
             binding.etLanguageName.setText(name)
             binding.tvLevel.text = level
             updateLevelSeekbar(level!!, binding.sbLevel)
-
-            Log.d("LANGUAGE ADD", name.toString() + " - " + level)
-
             binding.btnAdd.text = requireActivity().resources.getString(R.string.update)
         }
 

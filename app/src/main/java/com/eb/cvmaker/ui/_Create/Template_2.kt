@@ -20,6 +20,7 @@ import com.eb.cvmaker.addValueCell
 import com.eb.cvmaker.addValueSameCell
 import com.eb.cvmaker.createLineCell
 import com.eb.cvmaker.observe
+import com.eb.cvmaker.ui.SharedPreferencesManager
 import com.itextpdf.io.image.ImageDataFactory
 import com.itextpdf.kernel.geom.PageSize
 import com.itextpdf.layout.Document
@@ -41,6 +42,8 @@ class Template_2 @Inject constructor(
     var context: Context,
 ) {
 
+    private val sharedPreferencesManager: SharedPreferencesManager? = null
+
     val widthLeft = PageSize.A4.width * 0.30f
     val widthSpace = PageSize.A4.width * 0.03f // 2 tablo arası mesafe
     val widthRight = PageSize.A4.width * 0.52f
@@ -49,7 +52,7 @@ class Template_2 @Inject constructor(
     var image = Images()
 
     // lifecycleOwner fragment'ın yaşam döngüsü olaylarını gözlemlemek için kullanılır.
-    val lifecycleOwner = requireActivity as LifecycleOwner // Assuming you're in a fragment
+    val lifecycleOwner = requireActivity as LifecycleOwner
 
     fun generateCV(document: Document) {
 
@@ -72,7 +75,7 @@ class Template_2 @Inject constructor(
         informationCommunicationRight(tableRight)
 
         val tableContainer = Table(2)
-            .setMarginTop(60f)
+            .setMarginTop(75f)
             .setHeight(UnitValue.createPercentValue(100f))
             .setWidth(PageSize.A4.width)
             .setMarginLeft(-18f)
@@ -84,7 +87,6 @@ class Template_2 @Inject constructor(
         val secondColumn = Cell()
             .add(tableRight)
             .setWidth(widthRight)
-            .setPaddingTop(10f)
             .setBorder(Border.NO_BORDER)
 
 
@@ -114,19 +116,23 @@ class Template_2 @Inject constructor(
         val A4_WIDTH_MM = 210f
         val A4_HEIGHT_MM = 297f
         val DPI = 72 // veya 96, kullanılan DPI'ye bağlı olarak değiştirin
+        // DPI, genellikle bir ekran veya bir yazıcı gibi bir cihazın çözünürlüğünü ifade eder.
 
 // Drawableden resmi alıyor.
         val d1 = context.getDrawable(R.drawable.template2_background)
         val bitmapOriginal = (d1 as BitmapDrawable).bitmap
 
-// A4 boyutuna göre resize ????
         val widthPx = (A4_WIDTH_MM / 25.4f * DPI).toInt()
         val heightPx = (A4_HEIGHT_MM / 25.4f * DPI).toInt()
         val bitmapResized = Bitmap.createScaledBitmap(bitmapOriginal, widthPx, heightPx, false)
 
 // Resmi PDF'e ekle.
         val stream1 = ByteArrayOutputStream()
-        bitmapResized.compress(Bitmap.CompressFormat.JPEG, 100, stream1)
+        bitmapResized.compress(
+            Bitmap.CompressFormat.JPEG,
+            100,
+            stream1
+        ) // PDF dosyasına eklenmek üzere JPEG formatına dönüştürülür.
         val byte = stream1.toByteArray()
 
         val imageData1 = ImageDataFactory.create(byte)
@@ -137,9 +143,7 @@ class Template_2 @Inject constructor(
     }
 
     fun profile(document: Document) {
-        var sharedPreferences =
-            context?.getSharedPreferences("userImage", AppCompatActivity.MODE_PRIVATE)
-        var filePath = sharedPreferences?.getString("imagePath", "").toString()
+        var filePath = sharedPreferencesManager?.getUserImage()
 
         if (filePath != null) {
             try {
@@ -199,12 +203,14 @@ class Template_2 @Inject constructor(
                         it.name to style.template_2_Name_Surname(),
                         requireActivity.resources.getString(R.string.space) to style.template_2_Name_Surname(),
                         it.surname?.toUpperCase() to style.template_2_Name_Surname(),
-
-                        )
-                    val valuesJob = listOf(
-                        it.job?.toUpperCase() to style.template_2_Job()
                     )
 
+                    val valuesJob =
+                        if (!it.job.isNullOrEmpty()) {
+                            listOf(it.job?.toUpperCase() to style.template_2_Job())
+                        } else {
+                            listOf()
+                        }
 
                     var cellNameAndSurname = addValueSameCell(
                         values = valuesName,
@@ -226,18 +232,16 @@ class Template_2 @Inject constructor(
     }
 
     // Communication
-    fun titleContact(table: Table) {
-        var title = requireActivity.resources.getString(R.string.contact)
-        table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLineCell(widthLeft))
-    }
-
     fun personalInformationContact(table: Table) {
         lifecycleOwner.observe(viewModel.communicationMLD) {
             if (!it.isNullOrEmpty()) {
-
-                titleContact(table)
                 it?.forEach {
+
+                    if (!it.phone.isNullOrEmpty() || !it.job.isNullOrEmpty() || !it.email.isNullOrEmpty()) {
+                        var title = requireActivity.resources.getString(R.string.contact)
+                        titleInformation(table, title, widthLeft)
+                    }
+
                     val valuesPhone = listOf(
                         it.phone to style.template_2_Arial_11f(),
                     )
@@ -251,7 +255,6 @@ class Template_2 @Inject constructor(
                     )
 
                     with(table) {
-
                         // Phone
                         if (!it.phone.isNullOrEmpty()) {
                             var imagePhone = image.image(context, R.drawable.baseline_phone_24)
@@ -290,12 +293,6 @@ class Template_2 @Inject constructor(
     }
 
     // Social Media
-    fun titleSocialMedia(table: Table) {
-        var title = requireActivity.resources.getString(R.string.SocialMedia)
-        table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLineCell(widthLeft))//.setPaddingBottom(-15f)
-    }
-
     fun informationSocialMedia(table: Table) {
         val imageGithub = image.image(context, R.drawable.github_)
         val imageLinkedin = image.image(context, R.drawable.linkedin_)
@@ -304,22 +301,19 @@ class Template_2 @Inject constructor(
         lifecycleOwner.observe(viewModel.socialMediaMLD) { socialMedia ->
             if (!socialMedia.isNullOrEmpty()) {
 
-                titleSocialMedia(table)
+                var title = requireActivity.resources.getString(R.string.SocialMedia)
+                titleInformation(table, title, widthLeft)
 
                 socialMedia.forEach {
-
                     val valuesGithub = listOf(
                         it.github to style.template_2_Arial_105f(),
                     )
-
                     val valuesLinkedIn = listOf(
                         it.linkedIn to style.template_2_Arial_105f(),
                     )
-
                     val valuesWebSite = listOf(
                         it.webSite to style.template_2_Arial_105f(),
                     )
-
 
                     with(table) {
                         if (!it.github.isNullOrEmpty()) {
@@ -353,18 +347,13 @@ class Template_2 @Inject constructor(
     }
 
     // Language
-    fun titleLanguages(table: Table) {
-        var title = requireActivity.resources.getString(R.string.Languages)
-        table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLineCell(widthLeft))
-    }
-
     fun informationLanguages(table: Table) {
 
         lifecycleOwner.observe(viewModel.languageMLD) { socialMedia ->
             if (!socialMedia.isNullOrEmpty()) {
 
-                titleLanguages(table)
+                var title = requireActivity.resources.getString(R.string.Languages)
+                titleInformation(table, title, widthLeft)
 
                 socialMedia.forEach {
                     val valuesLanguageAndLevel = listOf(
@@ -389,17 +378,13 @@ class Template_2 @Inject constructor(
     }
 
     // Skills
-    fun titleAbilities(table: Table) {
-        var title = requireActivity.resources.getString(R.string.skills)
-        table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLineCell(widthLeft))
-    }
-
     fun informationAbilities(table: Table) {
         lifecycleOwner.observe(viewModel.abilitiesMLD) { skills ->
             if (!skills.isNullOrEmpty()) {
 
-                titleAbilities(table)
+                var title = requireActivity.resources.getString(R.string.skills)
+                titleInformation(table, title, widthLeft)
+
 
                 skills.forEach {
                     val valuesAbilities = listOf(
@@ -423,21 +408,14 @@ class Template_2 @Inject constructor(
     }
 
     // References
-    fun titleReferences(table: Table) {
-        var title = requireActivity.resources.getString(R.string.References)
-        table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLineCell(widthLeft))
-    }
-
     fun informationReferences(table: Table) {
         lifecycleOwner.observe(viewModel.referencesMLD) { reference ->
             if (!reference.isNullOrEmpty()) {
 
-                titleReferences(table)
+                var title = requireActivity.resources.getString(R.string.References)
+                titleInformation(table, title, widthLeft)
 
                 reference.forEach {
-
-
                     with(table) {
                         if (!it.name.isNullOrEmpty()) {
 
@@ -504,28 +482,15 @@ class Template_2 @Inject constructor(
     }
 
     // About Me
-    fun titleAboutMe(table: Table) {
-        var title = requireActivity.resources.getString(R.string.summary)
-        table.addCell(
-            addValueCell(
-                title,
-                style.template_2_Heebo_Medium_16f(),
-                top = 8f,
-                bottom = -10f
-            )
-        )
-        table.addCell(createLineCell(widthRight))
-    }
-
     fun informationAboutMe(table: Table) {
         lifecycleOwner.observe(viewModel.communicationMLD) { communicationData ->
             if (!communicationData.isNullOrEmpty()) {
-
-                titleAboutMe(table)
-
                 communicationData.forEach {
                     with(table) {
                         if (!it.aboutMe.isNullOrEmpty()) {
+
+                            var title = requireActivity.resources.getString(R.string.summary)
+                            titleInformation(table, title, widthRight)
 
                             val valuesAboutMe = listOf(
                                 it.aboutMe to style.template_2_Arial_11f(),
@@ -544,17 +509,12 @@ class Template_2 @Inject constructor(
     }
 
     // Experience
-    fun titleExperience(table: Table) {
-        var title = requireActivity.resources.getString(R.string.Experience)
-        table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLineCell(widthRight))
-    }
-
     fun informationExperience(table: Table) {
         lifecycleOwner.observe(viewModel.experienceMLD) { experience ->
             if (!experience.isNullOrEmpty()) {
 
-                titleExperience(table)
+                var title = requireActivity.resources.getString(R.string.Experience)
+                titleInformation(table, title, widthRight)
 
                 experience?.forEach {
                     with(table) {
@@ -611,17 +571,12 @@ class Template_2 @Inject constructor(
     }
 
     // Education
-    fun titleEducation(table: Table) {
-        var title = requireActivity.resources.getString(R.string.Education)
-        table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLineCell(widthRight))
-    }
-
     fun informationEducation(table: Table) {
         lifecycleOwner.observe(viewModel.educationMLD) { education ->
             if (!education.isNullOrEmpty()) {
 
-                titleEducation(table)
+                var title = requireActivity.resources.getString(R.string.Education)
+                titleInformation(table, title, widthRight)
 
                 education?.forEach {
                     with(table) {
@@ -673,17 +628,12 @@ class Template_2 @Inject constructor(
     }
 
     // Education
-    fun titleCertificates(table: Table) {
-        var title = requireActivity.resources.getString(R.string.Certificates)
-        table.addCell(addValueCell(title, style.template_2_Heebo_Medium_16f(), bottom = -10f))
-        table.addCell(createLineCell(widthRight))
-    }
-
     fun informationCertificates(table: Table) {
         lifecycleOwner.observe(viewModel.certificateMLD) { certificates ->
             if (!certificates.isNullOrEmpty()) {
 
-                titleCertificates(table)
+                var title = requireActivity.resources.getString(R.string.Certificates)
+                titleInformation(table, title, lineWidht = widthRight)
 
                 certificates?.forEach {
                     with(table) {
@@ -727,5 +677,20 @@ class Template_2 @Inject constructor(
                 }
             }
         }
+    }
+
+    fun titleInformation(
+        table: Table,
+        title: String,
+        lineWidht: Float,
+    ) {
+        table.addCell(
+            addValueCell(
+                title,
+                style.template_2_Heebo_Medium_16f(),
+                bottom = -10f,
+            )
+        )
+        table.addCell(createLineCell(lineWidht))
     }
 }

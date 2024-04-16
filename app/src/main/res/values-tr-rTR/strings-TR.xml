@@ -81,6 +81,10 @@
 
     <string name="messageForEmpty">Boş alanların doldurulması gerekmektedir</string>
     <string name="messageForSaved">Başarıyla Kaydedildi</string>
+    <string name="messageForCouldntCreate">PDF oluşturulamadı</string>
+    <string name="messageForDownload">PDF, İndirilenler klasörüne başarıyla kaydedildi!</string>
+    <string name="messageForFailed">PDF kaydedilemedi!</string>
+
 
     <string name="titleForAlert">"Emin misiniz?"</string>
     <string name="messageForAlert">Silmek istediğinizden emin misiniz ? </string>
@@ -90,6 +94,7 @@
     <string name="buttonForOK">Tamam</string>
 
     <string name="template">ŞABLONLAR</string>
+    <string name="chooseLanguage">Dil</string>
 
     <string name="CV">Oluşturulan CV</string>
     <string name="dots">\u00A0 : \u00A0</string>
@@ -109,5 +114,9 @@
     <string name="alert_Yes">Evet</string>
 
     <string name="sampleTemplate">Örnek Şablon</string>
+
+    <string name="YourCVs">Özgeçmişlerin</string>
+
+    <string name="sharePDF">Paylaş</string>
 
 </resources>

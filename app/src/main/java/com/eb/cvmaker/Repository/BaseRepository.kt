@@ -5,14 +5,6 @@ import com.eb.cvmaker.exception
 import java.lang.Exception
 import javax.inject.Inject
 
-/*
-
-interface BaseRepository<T> {
-    suspend fun saveData(userData: T): Boolean
-    suspend fun deleteData(): Boolean
-    suspend fun getData(): List<T>
-}
-*/
 
 open class BaseRepository<T> @Inject constructor(private val dao: BaseDao<T>) {
     open suspend fun saveData(userData: T): Boolean {
@@ -50,10 +42,6 @@ open class BaseRepository<T> @Inject constructor(private val dao: BaseDao<T>) {
         }
         return isSuccessful
     }
-
-/*    open suspend fun getData(): List<T> {
-        return dao.getAllInfo(TableNames.LANGUAGE)
-    }*/
 
 }
 

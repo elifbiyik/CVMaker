@@ -25,7 +25,7 @@ import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import javax.inject.Inject
 
-class ChooseTemplateRepository @Inject constructor(var storage: FirebaseStorage, var auth: FirebaseAuth) {
+class ChooseTemplateRepository @Inject constructor(var storage: FirebaseStorage) {
 
     @Inject
     lateinit var communicationDao: CommunicationDao
@@ -96,16 +96,5 @@ class ChooseTemplateRepository @Inject constructor(var storage: FirebaseStorage,
     }
     suspend fun getReferences(): List<References> {
         return referencesDao.getAllInfo()
-    }
-
-    fun getProfile(): Task<Uri> {
-        val imageReference = auth.currentUser?.let { currentUser ->
-            val uid = currentUser.uid
-            FirebaseStorage.getInstance().reference.child("images/$uid.jpg")
-        }
-
-        return imageReference?.downloadUrl
-            ?: Tasks.forException(NullPointerException("Current user is null"))
-
     }
 }
