@@ -293,8 +293,8 @@ class CommunicationFragment : Fragment() {
             .setAspectRatio(100, 100)
             .setCropShape(CropImageView.CropShape.OVAL)
             .setFixAspectRatio(true) // En boy oranını kilitle
-            .setMinCropResultSize(900, 900) // Minimum kırpma sonucu boyutu
-            .setMaxCropResultSize(900, 900) // Maksimum kırpma sonucu boyutu
+            .setMinCropResultSize(500, 500) // Minimum kırpma sonucu boyutu
+            .setMaxCropResultSize(1000, 1000) // Maksimum kırpma sonucu boyutu
             .start(requireContext(), this)
     }
 
