@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.eb.cvmaker.Adapter.AppLanguageAdapter
 import com.eb.cvmaker.Model.AppLanguage
@@ -19,8 +20,6 @@ class AppLanguageFragment: Fragment() {
 
     private lateinit var binding: FragmentAppLanguageBinding
     private lateinit var adapter: AppLanguageAdapter
-
-    private val sharedPreferencesManager: SharedPreferencesManager ?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +56,13 @@ class AppLanguageFragment: Fragment() {
     }
 
     fun writeLocaleSharedPreferances(selectedLocale: String) {
-        sharedPreferencesManager?.saveLanguage(selectedLocale)
+        var sharedPreferences =
+            requireContext().getSharedPreferences("language", AppCompatActivity.MODE_PRIVATE)
+        var editor = sharedPreferences.edit()
+        editor.putString(
+            "selectedLocale",
+            selectedLocale
+        )
+        editor.apply()
     }
 }

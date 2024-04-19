@@ -27,7 +27,6 @@ class HomePageFragment : Fragment() {
     private lateinit var banner2: AdView
     private lateinit var banner3: AdView
     lateinit var appLanguage: String
-    private val sharedPreferencesManager: SharedPreferencesManager? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,7 +92,10 @@ class HomePageFragment : Fragment() {
     }
 
     fun getPdfPathSharedPreferances(): String? {
-        return sharedPreferencesManager?.getPdfPath()
+        var sharedPreferences =
+            context?.getSharedPreferences("PDFFilePath", AppCompatActivity.MODE_PRIVATE)
+        var pdfPath = sharedPreferences?.getString("pdfFilePath", "")
+        return pdfPath
     }
 
     fun loadPdfFromPath(filePath: String) {

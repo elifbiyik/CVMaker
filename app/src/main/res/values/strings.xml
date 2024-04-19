@@ -118,7 +118,8 @@
     <string name="YourCVs">Your CVs</string>
 
     <string name="sharePDF">Share PDF</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="imagePath">You should have a profile photo for this CV</string>
+
 
 </resources>

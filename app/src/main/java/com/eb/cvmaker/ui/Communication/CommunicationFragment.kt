@@ -21,7 +21,6 @@ import com.eb.cvmaker.message
 import com.eb.cvmaker.observe
 import com.eb.cvmaker.replace
 import com.eb.cvmaker.ui.InformationsFragment
-import com.eb.cvmaker.ui.SharedPreferencesManager
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,8 +32,6 @@ class CommunicationFragment : Fragment() {
     private val viewModel: CommunicationVM by viewModels()
     private val REQUEST_IMAGE_GALLERY = 1
     private var imageUri: Uri? = null
-
-    private val sharedPreferencesManager: SharedPreferencesManager ?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -277,7 +274,7 @@ class CommunicationFragment : Fragment() {
                     imageUri = croppedUri!!
                     val filePath = croppedUri.path
 
-                    filePath?.let { it1 -> sharedPreferencesManager?.saveUserImage(it1) }
+                    filePath?.let { it1 ->writeLocaleSharedPreferances(it1) }
 
                 } else {
                     val uri = data.data
@@ -285,6 +282,17 @@ class CommunicationFragment : Fragment() {
                 }
             }
         }
+    }
+
+    fun writeLocaleSharedPreferances(userImage: String) {
+        var sharedPreferences =
+            requireContext().getSharedPreferences("UserImagePath", AppCompatActivity.MODE_PRIVATE)
+        var editor = sharedPreferences.edit()
+        editor.putString(
+            "userImage",
+            userImage
+        )
+        editor.apply()
     }
 
     fun cropImages (uri : Uri) {

@@ -5,9 +5,9 @@ import android.Manifest.permission.MANAGE_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +22,6 @@ import com.eb.cvmaker.Adapter.ChooseTemplateAdapter
 import com.eb.cvmaker.databinding.FragmentChooseTemplateBinding
 import com.eb.cvmaker.message
 import com.eb.cvmaker.replace
-import com.eb.cvmaker.ui.SharedPreferencesManager
 import com.itextpdf.kernel.geom.PageSize
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
@@ -30,7 +29,6 @@ import com.itextpdf.layout.Document
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChooseTemplateFragment : Fragment() {
@@ -38,8 +36,6 @@ class ChooseTemplateFragment : Fragment() {
     private lateinit var binding: FragmentChooseTemplateBinding
     private val viewModel: ChooseTemplateVM by viewModels()
     private lateinit var adapter: ChooseTemplateAdapter
-
-    private val sharedPreferencesManager: SharedPreferencesManager ?= null
 
     var PERMISSION_CODE = 101
     var FILE_NAME = "CV.pdf"
@@ -101,7 +97,7 @@ class ChooseTemplateFragment : Fragment() {
         when (index) {
             0 -> Template_1(viewModel, requireActivity(), requireContext()).generateCV(document)
             1 -> Template_2(viewModel, requireActivity(), requireContext()).generateCV(document)
-            //      2 -> Template_3(viewModel, requireActivity(), requireContext()).generateCV(document)
+            2 -> Template_3(viewModel, requireActivity(), requireContext()).generateCV(document)
         }
 
         // Belge içeriği varsa kapatılmalı. Belgede veri yoksa kapatma yapılmıyor. Kapatmadığı için crash oluyor.  Hata veriyor. (Document has no pages.)
@@ -118,7 +114,15 @@ class ChooseTemplateFragment : Fragment() {
     }
 
     fun writePdfPathSharedPreferances(pdfFilePath: String) {
-        sharedPreferencesManager?.savePdfPath(pdfFilePath)
+
+        var sharedPreferences =
+            requireContext().getSharedPreferences("PDFFilePath", AppCompatActivity.MODE_PRIVATE)
+        var editor = sharedPreferences.edit()
+        editor.putString(
+            "pdfFilePath",
+            pdfFilePath
+        )
+        editor.apply()
     }
 
     fun checkPermissions(): Boolean {

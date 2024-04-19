@@ -93,12 +93,14 @@ fun addText(
 fun addValueCell(
     value: String? = null,
     styles: Style? = Styles().styleText(),
-    top: Float? = 0f,
-    bottom: Float? = 0f,
+    marginTop: Float ?= 0f,
+    marginBottom: Float? = 0f,
     left: Float? = 0f
 ): Cell? {
     return Cell().add(
-        Paragraph(value).addStyle(styles).setPaddingBottom(bottom ?: 0f).setPaddingTop(top ?: 0f)
+        Paragraph(value).addStyle(styles)
+            .setMarginBottom(marginBottom ?: 0f)
+            .setMarginTop(marginTop ?: 0f)
             .setPaddingLeft(left ?: 0f)
     ).setBorder(Border.NO_BORDER)
 }
@@ -106,6 +108,7 @@ fun addValueCell(
 fun addValueSameCell(
     image: Image? = null,
     values: List<Pair<String?, Style?>> = emptyList(),
+    marginTop : Float = 0f,
     paddingBottom: Float = 0f,
     paddingTop: Float = 0f,
     paddingLeft: Float = 0f,
@@ -125,6 +128,7 @@ fun addValueSameCell(
     }
 
     cell.add(paragraph.setMarginBottom(marginBottomParagraph))
+        .setMarginTop(marginTop)
         .setPaddingTop(paddingTop)
         .setPaddingBottom(paddingBottom)
         .setPaddingLeft(paddingLeft)

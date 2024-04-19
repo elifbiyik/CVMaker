@@ -119,4 +119,7 @@
 
     <string name="sharePDF">Paylaş</string>
 
+    <string name="imagePath">Bu CV için profil fotoğrafınız olmalı</string>
+
+
 </resources>

@@ -6,12 +6,12 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.eb.cvmaker.R
 import com.eb.cvmaker.databinding.FragmentShowPdfBinding
 import com.eb.cvmaker.message
-import com.eb.cvmaker.ui.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
@@ -20,9 +20,6 @@ import java.io.IOException
 class ShowPDFFragment : Fragment() {
 
     private lateinit var binding: FragmentShowPdfBinding
-
-    private val sharedPreferencesManager: SharedPreferencesManager ?= null
-
     var FILENAME = "CV.pdf"
 
     override fun onCreateView(
@@ -55,7 +52,10 @@ class ShowPDFFragment : Fragment() {
     }
 
     fun getPdfPathSharedPreferances(): String? {
-      return sharedPreferencesManager?.getPdfPath()
+        var sharedPreferences =
+            context?.getSharedPreferences("PDFFilePath", AppCompatActivity.MODE_PRIVATE)
+        var pdfPath = sharedPreferences?.getString("pdfFilePath", "")
+        return pdfPath
     }
 
     fun loadPdfFromPath(filePath: String) {

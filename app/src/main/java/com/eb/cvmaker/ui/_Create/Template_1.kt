@@ -43,7 +43,7 @@ class Template_1 @Inject constructor(
         informationAbilities(document)
         informationExperience(document)
         informationReferences(document)
-        informationCertificate(document)
+    //    informationCertificate(document)
     }
 
     // Communication

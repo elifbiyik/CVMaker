@@ -188,4 +188,77 @@ class Styles {
             .setFont(pdfFontArial)
     }
 
+
+    fun template_3_Arial_28f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(0, 0, 0))
+            .setFontSize(28f)
+            .setFont(pdfFontArial)
+            .setBold()
+    }
+
+    fun template_3_Arial_14f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(63, 63, 63))
+            .setFontSize(14f)
+            .setFont(pdfFontArial)
+            .setItalic()
+            .setBold()
+    }
+
+
+    fun template_3_Arial_16f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(0, 0, 0))
+            .setFontSize(16f)
+            .setFont(pdfFontArial)
+            .setBold()
+    }
+
+    fun template_3_Arial_Bold_Gray_12f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(63, 63, 63))
+            .setFontSize(12f)
+            .setFont(pdfFontArial)
+            .setBold()
+    }
+
+    fun template_3_Arial_Gray_12f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(63, 63, 63))
+            .setFontSize(12f)
+            .setFont(pdfFontArial)
+    }
+
+    fun template_3_Arial_12f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(0, 0, 0))
+            .setFontSize(12f)
+            .setFont(pdfFontArial)
+    }
+
+    fun template_3_Arial_Gray_10f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(63, 63, 63))
+            .setFontSize(10f)
+            .setFont(pdfFontArial)
+    }
+
+    fun template_3_Arial_10f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(0, 0, 0))
+            .setFontSize(10f)
+            .setFont(pdfFontArial)
+    }
+
+    fun template_3_Arial_11f(): Style? {
+        return Style()
+            .setFontColor(DeviceRgb(0, 0, 0))
+            .setFontSize(11f)
+            .setFont(pdfFontArial)
+    }
+
+
+
+
 }
